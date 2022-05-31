@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Data.Extensions;
 using Nop.Services.Catalog;
 using Nop.Services.Security;
 using Nop.Services.Stores;

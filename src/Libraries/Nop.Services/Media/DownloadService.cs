@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Nop.Core.Domain.Media;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Media
 {

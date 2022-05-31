@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Nop.Core.Domain.Gdpr;
 using Nop.Web.Areas.Admin.Models.Settings;
-using Nop.Web.Areas.Admin.Models.Webhook;
 
 namespace Nop.Web.Areas.Admin.Factories
 {
@@ -60,16 +59,6 @@ namespace Nop.Web.Areas.Admin.Factories
         /// </returns>
         Task<NewsSettingsModel> PrepareNewsSettingsModelAsync(NewsSettingsModel model = null);
         
-        /// <summary>
-        /// Prepare webhook settings model
-        /// </summary>
-        /// <param name="model">Webhook settings model</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation
-        /// The task result contains the webhook settings model
-        /// </returns>
-        Task<WebhookSettingModel> PrepareWebHookSettingsModelAsync(WebhookSettingModel model = null);
-
         /// <summary>
         /// Prepare shipping settings model
         /// </summary>

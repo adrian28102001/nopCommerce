@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Orders;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Stores;
 
 namespace Nop.Services.Orders

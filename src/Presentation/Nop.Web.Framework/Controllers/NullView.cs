@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 
-namespace Nop.Web.Framework
+namespace Nop.Web.Framework.Controllers
 {
     public class NullView : IView
     {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Catalog;
 
 namespace Nop.Services.Media

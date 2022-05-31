@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Customers;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Customers
 {

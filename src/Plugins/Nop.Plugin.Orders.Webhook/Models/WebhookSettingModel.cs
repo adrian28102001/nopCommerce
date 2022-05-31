@@ -1,7 +1,7 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Web.Areas.Admin.Models.Webhook;
+namespace Nop.Plugin.Orders.Webhook.Models;
 
 public record WebhookSettingModel : BaseNopModel, ISettingsModel
 {

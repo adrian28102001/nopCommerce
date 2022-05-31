@@ -1,16 +1,24 @@
-﻿@model Nop.Web.Areas.Admin.Models.Webhook.WebhookSettingModel
+﻿@page
+@using Nop.Web.Framework.Infrastructure
+@using Nop.Web.Framework.TagHelpers.Admin
+@using Nop.Web.Framework.TagHelpers.Shared
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Common
+@model Nop.Plugin.Orders.Webhook.Models.WebhookSettingModel
 
-@{
-    ViewBag.Title = "Webhook from Setting";
-}
 
 @{
     const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+    
     var customer = await workContext.GetCurrentCustomerAsync();
     var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 }
 
-<form asp-controller="Setting" asp-action="Webhook" method="post">
+<form asp-controller="OrderWebhook" asp-action="WebhookConfigure" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.Configuration.Settings.Webhooks.Enabled")
@@ -30,8 +38,6 @@
             <div class="form-horizontal">
                 <nop-cards id="customersettings-cards">
                     <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Webhook.Common", Model)</nop-card>
-
-
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>

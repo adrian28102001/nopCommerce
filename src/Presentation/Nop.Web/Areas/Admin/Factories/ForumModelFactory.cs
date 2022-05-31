@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Forums;
+using Nop.Data.Extensions;
 using Nop.Services.Forums;
 using Nop.Services.Helpers;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;

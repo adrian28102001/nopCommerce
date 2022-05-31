@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.AspNetCore.Routing;
 using Nop.Core.Infrastructure;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 using Nop.Services.Security;
 

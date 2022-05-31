@@ -14,6 +14,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Infrastructure;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Plugin.Shipping.EasyPost.Domain;
 using Nop.Plugin.Shipping.EasyPost.Domain.Batch;
 using Nop.Plugin.Shipping.EasyPost.Domain.Shipment;

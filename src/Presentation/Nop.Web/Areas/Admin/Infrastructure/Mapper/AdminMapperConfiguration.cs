@@ -64,7 +64,6 @@ using Nop.Web.Areas.Admin.Models.Tax;
 using Nop.Web.Areas.Admin.Models.Templates;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Areas.Admin.Models.Vendors;
-using Nop.Web.Areas.Admin.Models.Webhook;
 using Nop.Web.Framework.Configuration;
 using Nop.Web.Framework.Models;
 
@@ -111,7 +110,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
             CreateTopicsMaps();
             CreateVendorsMaps();
             CreateWarehouseMaps();
-            CreateWebhookMaps();
+            
             //add some generic mapping rules
             ForAllMaps((mapConfiguration, map) =>
             {
@@ -1243,15 +1242,7 @@ namespace Nop.Web.Areas.Admin.Infrastructure.Mapper
                 .ForMember(model => model.ShowNewsOnMainPage_OverrideForStore, options => options.Ignore());
             CreateMap<NewsSettingsModel, NewsSettings>();
         }
-
-        protected virtual void CreateWebhookMaps()
-        {
-            CreateMap<WebhookSettings, WebhookSettingModel>()
-                .ForMember(model => model.ConfigurationEnabled_OverrideForStore,options => options.Ignore())
-                .ForMember(model => model.PlaceOrderEndpointUrl_OverrideForStore, options => options.Ignore());
-            CreateMap<WebhookSettingModel, WebhookSettings>();
-        }
-
+        
         /// <summary>
         /// Create orders maps 
         /// </summary>

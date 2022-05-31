@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Directory;
 
 namespace Nop.Services.Common
