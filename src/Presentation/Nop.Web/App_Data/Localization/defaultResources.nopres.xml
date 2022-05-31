@@ -7945,8 +7945,13 @@
     <Value>News comments</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.Enabled">
-    <Value>News enabled</Value>
   </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Webhooks.Enabled">
+        <Value>Webhooks enabled</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Webhooks.PlaceOrderEndpointUrl">
+        <Value>Place order endpoint url</Value>
+    </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.News.Enabled.Hint">
     <Value>Check to enable the news in your store.</Value>
   </LocaleResource>
@@ -19824,4 +19829,14 @@
   <LocaleResource Name="Wishlist.YourWishlistURL">
     <Value>Your wishlist URL for sharing</Value>
   </LocaleResource>
+    <LocaleResource Name="admin.configuration.settings.webhook">
+        <Value>Admin configuration settings</Value>
+    </LocaleResource>
+    <LocaleResource Name="admin.configuration.settings.webhook.blocktitle.common">
+        <Value>Admin configuration settings blocktitle</Value>
+    </LocaleResource>
+    <LocaleResource Name="Admin.Configuration.Settings.Webhooks.Enabled">
+        <Value>Check Box</Value>
+    </LocaleResource>
+    
 </Language>

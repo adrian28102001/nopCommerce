@@ -6,6 +6,7 @@ using Nop.Core.Domain.Stores;
 using Nop.Core.Events;
 using Nop.Services.Events;
 using Nop.Services.Messages;
+using Nop.Services.Orders;
 
 namespace Nop.Plugin.Misc.Sendinblue.Services
 {

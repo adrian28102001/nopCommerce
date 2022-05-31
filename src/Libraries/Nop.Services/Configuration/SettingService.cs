@@ -9,6 +9,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Configuration;
 using Nop.Core.Domain.Configuration;
+using Nop.Core.Domain.WebhookSettings;
 using Nop.Data;
 
 namespace Nop.Services.Configuration
@@ -444,7 +445,7 @@ namespace Nop.Services.Configuration
             else if (storeId > 0)
                 await DeleteSettingAsync(settings, keySelector, storeId);
         }
-
+        
         /// <summary>
         /// Delete all settings
         /// </summary>

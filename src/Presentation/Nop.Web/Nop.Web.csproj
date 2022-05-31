@@ -60,6 +60,17 @@
     <Folder Include="Plugins\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\NewPage\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\NewPage\NewPage.cshtml" />
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\WebhookSetting\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RestSharp" Version="107.3.1-alpha.0.26" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+  </ItemGroup>
+
   <!-- This target execute after "Build" target.
     We use it to clean up folder with plugins from unnecessary and obsolete libraries. -->
   <Target Name="NopTarget" AfterTargets="Build">

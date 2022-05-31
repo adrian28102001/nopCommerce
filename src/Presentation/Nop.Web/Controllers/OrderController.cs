@@ -177,10 +177,9 @@ namespace Nop.Web.Controllers
 
             var model = await _orderModelFactory.PrepareOrderDetailsModelAsync(order);
             model.PrintMode = true;
-
             return View("Details", model);
         }
-
+        
         //My account / Order details page / PDF invoice
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetPdfInvoice(int orderId)
