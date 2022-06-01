@@ -16,6 +16,6 @@ public class NopStartup : INopStartup
     public void Configure(IApplicationBuilder application)
     {
     }
-
+    
     public int Order { get; }
 }

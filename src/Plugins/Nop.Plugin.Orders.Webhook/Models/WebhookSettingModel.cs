@@ -6,14 +6,13 @@ namespace Nop.Plugin.Orders.Webhook.Models;
 public record WebhookSettingModel : BaseNopModel, ISettingsModel
 {
     public int ActiveStoreScopeConfiguration { get; set; }
-    
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Webhooks.Enabled")]
     public bool ConfigurationEnabled { get; set; }
     public bool ConfigurationEnabled_OverrideForStore { get; set; }
-    
-    
+
+
     [NopResourceDisplayName("Admin.Configuration.Settings.Webhooks.PlaceOrderEndpointUrl")]
     public string PlaceOrderEndpointUrl { get; set; }
     public bool PlaceOrderEndpointUrl_OverrideForStore { get; set; }
-    
 }
