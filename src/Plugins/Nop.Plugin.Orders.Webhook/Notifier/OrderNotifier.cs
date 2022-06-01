@@ -9,10 +9,11 @@ using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using RestSharp.Portable;
 using RestSharp.Portable.HttpClient;
 
-namespace Nop.Services.Orders;
+namespace Nop.Plugin.Orders.Webhook.Notifier;
 
 public class OrderNotifier : IConsumer<OrderPlacedEvent>
 {

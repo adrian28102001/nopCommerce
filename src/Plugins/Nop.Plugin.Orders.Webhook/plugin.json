@@ -2,7 +2,7 @@
   "Group": "Orders",
   "FriendlyName": "Orders plugin",
   "SystemName": "Orders.Webhook",
-  "Version": "1.49",
+  "Version": "1.72",
   "SupportedVersions": [ "4.60"],
   "Author": "Adrian",
   "DisplayOrder": 1,

@@ -25,7 +25,6 @@ using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Shipping;
 using Nop.Core.Domain.Tax;
 using Nop.Core.Domain.Vendors;
-using Nop.Core.Domain.WebhookSettings;
 using Nop.Core.Events;
 using Nop.Core.Infrastructure;
 using Nop.Data;
