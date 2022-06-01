@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core;
 using Nop.Core.Infrastructure;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 
 namespace Nop.Services

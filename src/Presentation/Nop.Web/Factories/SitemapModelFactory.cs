@@ -20,6 +20,7 @@ using Nop.Core.Domain.News;
 using Nop.Core.Domain.Seo;
 using Nop.Core.Domain.Topics;
 using Nop.Core.Events;
+using Nop.Data.Extensions;
 using Nop.Services.Blogs;
 using Nop.Services.Catalog;
 using Nop.Services.Customers;

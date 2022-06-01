@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using LinqToDB;
 using Nop.Core;
 
-namespace System.Linq
+namespace Nop.Data.Extensions
 {
     public static class AsyncIQueryableExtensions
     {

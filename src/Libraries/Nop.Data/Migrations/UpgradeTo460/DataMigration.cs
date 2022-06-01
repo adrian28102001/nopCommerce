@@ -11,6 +11,7 @@ using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Logging;
 using Nop.Core.Domain.ScheduleTasks;
+using Nop.Data.Extensions;
 
 namespace Nop.Data.Migrations.UpgradeTo460
 {

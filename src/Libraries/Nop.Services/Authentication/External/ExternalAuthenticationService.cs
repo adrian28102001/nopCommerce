@@ -12,6 +12,7 @@ using Nop.Core.Domain.Localization;
 using Nop.Core.Events;
 using Nop.Core.Http.Extensions;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Common;
 using Nop.Services.Customers;
 using Nop.Services.Localization;

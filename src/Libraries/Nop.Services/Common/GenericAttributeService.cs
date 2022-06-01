@@ -6,6 +6,7 @@ using Nop.Core;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Common;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.Common
 {

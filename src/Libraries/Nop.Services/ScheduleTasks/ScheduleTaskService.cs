@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.ScheduleTasks;
 using Nop.Data;
+using Nop.Data.Extensions;
 
 namespace Nop.Services.ScheduleTasks
 {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Shipping;
+using Nop.Data.Extensions;
 using Nop.Plugin.Shipping.EasyPost.Domain.Batch;
 using Nop.Plugin.Shipping.EasyPost.Models.Pickup;
 using Nop.Plugin.Shipping.EasyPost.Services;

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Directory;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 using Nop.Services.Directory;
 using Nop.Services.Localization;
 using Nop.Services.Orders;

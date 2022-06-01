@@ -22,6 +22,7 @@ namespace Nop.Plugin.Misc.Sendinblue.Infrastructure
         {
             services.AddHttpClient<MarketingAutomationHttpClient>().WithProxy();
 
+            //todo check here
             //register custom services
             services.AddScoped<SendinblueManager>();
             services.AddScoped<MarketingAutomationManager>();

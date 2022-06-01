@@ -9,10 +9,11 @@ using Nop.Services.Catalog;
 using Nop.Services.Customers;
 using Nop.Services.Events;
 using Nop.Services.Logging;
+using Nop.Services.Orders;
 using RestSharp.Portable;
 using RestSharp.Portable.HttpClient;
 
-namespace Nop.Services.Orders;
+namespace Nop.Plugin.Orders.Webhook.Notifier;
 
 public class OrderNotifier : IConsumer<OrderPlacedEvent>
 {
@@ -70,7 +71,7 @@ public class OrderNotifier : IConsumer<OrderPlacedEvent>
                 request.AddJsonBody(orderDetails);
                 var response = await client.Execute(request);
                 var output = response.Content;
-                await _logger.InsertLogAsync(LogLevel.Information, "Sent .... for ... with ...", output);
+                await _logger.InsertLogAsync(LogLevel.Information, $"Sent order details for {eventMessage.Order.Id} to {url}", output);
             }
         }
         catch (Exception e)

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Nop.Core.Caching;
 using Nop.Core.Domain.Messages;
 using Nop.Data;
+using Nop.Data.Extensions;
 using Nop.Services.Localization;
 using Nop.Services.Stores;
 

@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Core.Domain.Messages;
 using Nop.Core.Domain.Orders;
+using Nop.Data.Extensions;
 using Nop.Plugin.Misc.Sendinblue.Domain;
 using Nop.Services.Common;
 using Nop.Services.Configuration;

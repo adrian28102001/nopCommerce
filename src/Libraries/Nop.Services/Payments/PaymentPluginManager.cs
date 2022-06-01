@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Payments;
+using Nop.Data.Extensions;
 using Nop.Services.Configuration;
 using Nop.Services.Customers;
 using Nop.Services.Plugins;
