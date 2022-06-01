@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Nop.Core;
-using Nop.Core.Domain.WebhookSettings;
 using Nop.Plugin.Orders.Webhook.Models;
 using Nop.Services.Configuration;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;

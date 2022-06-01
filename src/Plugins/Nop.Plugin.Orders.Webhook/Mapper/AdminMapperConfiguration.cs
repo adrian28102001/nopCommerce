@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Nop.Core.Domain.WebhookSettings;
 using Nop.Core.Infrastructure.Mapper;
 using Nop.Plugin.Orders.Webhook.Models;
 

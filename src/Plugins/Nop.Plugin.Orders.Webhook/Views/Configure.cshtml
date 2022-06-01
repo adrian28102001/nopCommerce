@@ -1,5 +1,4 @@
-﻿@page
-@using Nop.Web.Framework.Infrastructure
+﻿@using Nop.Web.Framework.Infrastructure
 @using Nop.Web.Framework.TagHelpers.Admin
 @using Nop.Web.Framework.TagHelpers.Shared
 @using Microsoft.AspNetCore.Mvc.TagHelpers
@@ -8,17 +7,19 @@
 @using Nop.Services.Common
 @model Nop.Plugin.Orders.Webhook.Models.WebhookSettingModel
 
+@{
+    Layout = "_ConfigurePlugin";
+}
 
 @{
     const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
     var workContext = EngineContext.Current.Resolve<IWorkContext>();
     var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
-    
     var customer = await workContext.GetCurrentCustomerAsync();
     var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 }
 
-<form asp-controller="OrderWebhook" asp-action="WebhookConfigure" method="post">
+<form asp-controller="OrderWebhook" asp-action="Configure" method="post">
     <div class="content-header clearfix">
         <h1 class="float-left">
             @T("Admin.Configuration.Settings.Webhooks.Enabled")
@@ -31,13 +32,13 @@
             @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons, additionalData = Model })
         </div>
     </div>
+    
     <div asp-validation-summary="All"></div>
-
     <section class="content">
         <div class="container-fluid">
             <div class="form-horizontal">
                 <nop-cards id="customersettings-cards">
-                    <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Webhook.Common", Model)</nop-card>
+                    <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_Webhook.Common.cshtml", Model)</nop-card>
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
                 </nop-cards>
             </div>
@@ -46,7 +47,7 @@
    
     <script>
         function toggleForceMultifactorAuthentication() {
-            warningValidation('@Url.Action("ForceMultifactorAuthenticationWarning", "Setting")',
+            warningValidation('@Url.Action("ForceMultifactorAuthenticationWarning", "OrderWebhook")',
                 '@Html.NameFor(model => model.ConfigurationEnabled)',
                 {
                     forceMultifactorAuthentication: $('#@Html.IdFor(model => model.ConfigurationEnabled)').is(':checked')

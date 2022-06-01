@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Core.Domain.WebhookSettings;
 using Nop.Plugin.Orders.Webhook.Factory;
 using Nop.Plugin.Orders.Webhook.Models;
 using Nop.Services.Configuration;
@@ -16,9 +15,13 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Orders.Webhook.Controllers;
 
-public class OrderWebhookController : BaseController
+[Area(AreaNames.Admin)]
+[AutoValidateAntiforgeryToken]
+[ValidateIpAddress]
+[AuthorizeAdmin]
+public class OrderWebhookController : BasePluginController
 {
-    private readonly PermissionService _permissionService;
+    private readonly IPermissionService _permissionService;
     private readonly IWebhookFactory _webhookFactory;
     private readonly IStoreContext _storeContext;
     private readonly ISettingService _settingService;
@@ -26,23 +29,23 @@ public class OrderWebhookController : BaseController
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
 
-    public OrderWebhookController(PermissionService permissionService,
+    public OrderWebhookController(IPermissionService permissionService, IWebhookFactory webhookFactory,
         IStoreContext storeContext, ISettingService settingService, ICustomerActivityService customerActivityService,
-        ILocalizationService localizationService, INotificationService notificationService,
-        IWebhookFactory webhookFactory)
+        ILocalizationService localizationService, INotificationService notificationService)
     {
         _permissionService = permissionService;
+        _webhookFactory = webhookFactory;
         _storeContext = storeContext;
         _settingService = settingService;
         _customerActivityService = customerActivityService;
         _localizationService = localizationService;
         _notificationService = notificationService;
-        _webhookFactory = webhookFactory;
     }
+
 
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
-    public virtual async Task<IActionResult> WebhookConfigure()
+    public virtual async Task<IActionResult> Configure()
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
             return AccessDeniedView();
@@ -50,22 +53,21 @@ public class OrderWebhookController : BaseController
         //prepare model
         var model = await _webhookFactory.PrepareWebHookSettingsModelAsync();
 
-        return View("_Page_Views_OrderWebhook_cshtml/_Webhook.Common", model);
+        return View("~/Plugins/Orders.Webhook/Views/Configure.cshtml", model);
     }
 
     [HttpPost]
-    public virtual async Task<IActionResult> WebhookConfigure(WebhookSettingModel model)
+    public virtual async Task<IActionResult> Configure(WebhookSettingModel model)
     {
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
             return AccessDeniedView();
 
-        if (!ModelState.IsValid) return await WebhookConfigure();
+        if (!ModelState.IsValid) return await Configure();
 
         //load settings for a chosen store scope
         var storeScope = await _storeContext.GetActiveStoreScopeConfigurationAsync();
         var webhookSettings = await _settingService.LoadSettingAsync<WebhookSettings>(storeScope);
         webhookSettings = model.ToSettings(webhookSettings);
-
 
         //and loaded from database after each update
         await _settingService.SaveSettingOverridablePerStoreAsync(webhookSettings, x => x.ConfigurationEnabled,
@@ -84,6 +86,6 @@ public class OrderWebhookController : BaseController
             await _localizationService.GetResourceAsync("Admin.Configuration.Updated"));
 
         //if we got this far, something failed, redisplay form
-        return await WebhookConfigure();
+        return await Configure();
     }
 }
