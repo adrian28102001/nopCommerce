@@ -54,9 +54,93 @@
         else
         {
             var picture = Model.PictureModels.FirstOrDefault();
-            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
-                <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+            <a id = "link" title="@picture?.Title">
+                <img id ="productImage" alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+                <input id ="previewButton" data-id ="previewButton" type="button" class="product-box-add-to-cart-button-preview" value="Preview"/>
+                <div id="product-preview-details" title="@(Model.SeName)">
+                   <fieldset>
+                          <legend>
+                              Product details
+                          </legend>
+                          <table class="table">
+                              <thead>
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Name</th>
+                                  </tr>
+                              </thead>
+                              <tbody id="tblbody">
+                              </tbody>
+                          </table>
+                      </fieldset>
+                </div>
             </a>
+          
+                                                           
+            <script> 
+                function BindpatientData() {
+                    $.ajax({
+                        url: "/Catalog/GetProductOverview/@Model.Id",
+                        type: "GET",
+                        contentType: "application/json;charset=utf-8",
+                        dataType: "json",
+                        success: function (result)
+                        {
+                            debugger;
+                            // if (result) {
+                            //     //itetrate thorugh each record and bind it to td
+                            //     var html = '';
+                            //     $.each(result, function (key, item) {
+                            //         var tablerow = '<tr>'
+                            //             + '<td>' + item.Id + '</td>' 
+                            //             + '<td>' + item.Name + '</td>' 
+                            //             +'</tr>';
+                            //         $("#tblbody").append(tablerow);
+                            //     });
+                            // }
+                            if (result){
+                            $("previewButton").click(function(){
+                              $.ajax({url: "/Catalog/GetProductOverview/@Model.Id", success: function(result){
+                                $("#product-preview-details").html(result);
+                              }});
+                            });    
+                            }
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage.responseText);
+                        }
+                    });
+                }
+                
+                 $(document).ready(function () {
+                 $("#product-preview-details, #product-preview-details, #product-preview-details").hide();                    
+                 $("#previewButton, #previewButton, #previewButton").hide();            
+                 
+                 });
+                 
+              
+             $(document).ready(function () {
+                $(document).on('mouseover', '#link', function () {
+                    $(this).find("#previewButton").show();
+                    $(this).find("#productImage").hide();
+                    $(this).clickable(false);
+                }).on('mouseleave', '#link', function () {
+                    $(this).find("#previewButton").hide();
+                    $(this).find("#productImage").show();
+                });
+             });
+             
+                 $(document).ready(function () {
+                 $(document).on('click', '#previewButton', function () {
+                 $("#product-preview-details").dialog({ width : 1000, height: 1000});   
+                 BindpatientData();
+                 
+             
+                 }).on('mouseleave', '#link', function () {             
+                 });
+             });
+               
+            </script>
         }
     </div>
     <div class="details">

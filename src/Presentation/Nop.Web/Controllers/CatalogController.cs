@@ -137,6 +137,13 @@ namespace Nop.Web.Controllers
             return View(templateViewPath, model);
         }
 
+        public virtual async Task<IActionResult> GetProductOverview(int id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+
+            return View(product);
+        }
+
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
@@ -510,6 +517,8 @@ namespace Nop.Web.Controllers
 
             return Task.FromResult(isAvailable);
         }
+        
+        
 
         #endregion
     }

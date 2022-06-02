@@ -7175,6 +7175,15 @@ label, label + * {
     min-width: 150px;
     padding: 0 20px;
   }
+  .product-box-add-to-cart-button-preview {
+    position:relative; 
+    left:50px; 
+    top: -130px;
+    width: auto;
+    min-width: 190px;
+    min-height: 30px;
+    padding: 0 20px;
+  }
 
   .product-list .item-box .add-to-compare-list-button,
   .product-list .item-box .add-to-wishlist-button {
