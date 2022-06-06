@@ -8816,3 +8816,14 @@ label, label + * {
   padding: 5px;
   background-color: #4ab2f1;
 }
+
+.float-container-product-overview{
+  border: 3px solid #fff;
+  padding: 20px;
+}
+.float-child-product-overview{
+  width: 50%;
+  float: left;
+  padding: 20px;
+  border: 2px solid red;
+}

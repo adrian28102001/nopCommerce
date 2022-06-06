@@ -802,6 +802,7 @@ namespace Nop.Web.Factories
             if (product == null) throw new ArgumentNullException(nameof(product));
 
             var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+           
             var pictureUrlList = new List<string>();
         
             foreach (var picture in pictures)
@@ -809,8 +810,7 @@ namespace Nop.Web.Factories
                 var pictureUrl = await _pictureService.GetPictureUrlAsync(picture);
                 pictureUrlList.Add(pictureUrl.Url);
             }
-            
-            
+
             var productMap = new ProductOverview
             {
                 Name = product.Name,
@@ -818,28 +818,10 @@ namespace Nop.Web.Factories
                 Price = product.Price,
                 UrlString = pictureUrlList
             };
-
-
+            
             return await Task.FromResult(productMap);
         }
-
-        public Task<PictureOverviewModel> PreparePictureOverviewAsync(PictureModel pictureModel,
-            PictureOverviewModel pictureOverviewModel)
-        {
-            if (pictureModel == null) throw new ArgumentNullException(nameof(pictureModel));
-            pictureModel = new PictureModel();
-
-            var pictureMap = new PictureOverviewModel
-            {
-                Title = pictureModel.Title,
-                AlternateText = pictureModel.AlternateText,
-                ImageUrl = pictureModel.ImageUrl,
-                ThumbImageUrl = pictureModel.ThumbImageUrl,
-                FullSizeImageUrl = pictureModel.FullSizeImageUrl
-            };
-            return Task.FromResult(pictureMap);
-        }
-
+        
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>

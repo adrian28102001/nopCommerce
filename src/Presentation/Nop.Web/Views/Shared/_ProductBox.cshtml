@@ -35,7 +35,7 @@
                     @foreach (var picture in Model.PictureModels)
                     {
                         <a class="swiper-slide" href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture.Title">
-                            <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />
+                            <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title"/>
                         </a>
                     }
                 </div>
@@ -55,16 +55,14 @@
         else
         {
             var picture = Model.PictureModels.FirstOrDefault();
-            <a id = "link_@Model.Id" title="@picture?.Title">
-                <img id ="productImage" alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
-                
-                <input id ="previewButton_@Model.Id" type="button" class="product-box-add-to-cart-button-preview" value="Preview"/>
-                
+            <a id="link_@Model.Id" title="@picture?.Title">
+                <img id="productImage" alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title"/>
+                <input id="previewButton_@Model.Id" type="button" class="product-box-add-to-cart-button-preview" value="Preview"/>
                 <div id="product-preview-details_@Model.Id" title="@(Model.SeName)">
                 </div>
             </a>
-            
-                <script> 
+
+            <script> 
                 function BindpatientData(productId) {
                     $.ajax({
                         url: "/Catalog/GetProductOverview/"+productId,
@@ -92,16 +90,17 @@
              
              $(document).ready(function () {
                 $(document).on('click', '#previewButton_@Model.Id', function () {
-                     $("#product-preview-details_@Model.Id").dialog({ width : 1000, height: 1000});   
+                     $("#product-preview-details_@Model.Id").dialog({ width : 500, height: 500});   
                     BindpatientData(@Model.Id);
                  });
              });
             </script>
-                }
-            </div>
+        }
+    </div>
+    
     <div class="details">
         <h2 class="product-title">
-            <a href="@(Url.RouteUrl<Product>(new {SeName = Model.SeName }))">@Model.Name</a>
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))">@Model.Name</a>
         </h2>
         @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
         {

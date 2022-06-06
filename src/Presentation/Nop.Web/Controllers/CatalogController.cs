@@ -109,9 +109,7 @@ namespace Nop.Web.Controllers
         {
             var product = await _productService.GetProductByIdAsync(id);
             var productOverview = new ProductOverview();
-            
             var model = await _catalogModelFactory.PrepareProductOverviewAsync(product, productOverview);
-            
             
             return View(model);
         }

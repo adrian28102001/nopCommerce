@@ -4,14 +4,20 @@
 
 @model ProductOverview
 
-
-<h2>@Model.Name - title</h2>
-<h2>@Model.Price - title</h2>
-<h2>@Model.ShortDescription - Descrption</h2>
-@Model.UrlString
-
-@foreach (var picture in Model.UrlString)
-{
-    @* <p>Hii irl = @picture.ImageUrl</p> *@
-    <img id ="productImage" alt="exemplu" src="@picture?" /> 
-}
+<div id="float-container-product-overview">
+    <div class="float-child-product-overview">
+        <h3>Title: </h3>
+        <h3>Price: </h3>
+        <h3>Description: </h3>
+        <h3>Images: </h3>
+    </div>
+    <div class="float-child-product-overview">
+        <p> @Model.Name </p>
+        <p> @Model.Price</p>
+        <p> @Model.ShortDescription </p>
+        @foreach (var picture in Model.UrlString)
+        {
+            <img id="productImagePreview" alt="" src="@picture?" width="100" height="100"/>
+        }
+    </div>
+</div>
