@@ -101,15 +101,16 @@ namespace Nop.Web.Factories
         /// The task result contains the list of product models
         /// </returns>
        Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview);
-              
-              /// <summary>
-              /// Prepare image (simple) models
-              /// </summary>
-              /// <returns>
-              /// A task that represents the asynchronous operation
-              /// The task result contains the list of images
-              /// </returns>
-         Task<PictureOverviewModel> PreparePictureOverviewAsync(PictureModel pictureModel, PictureOverviewModel pictureOverviewModel)
+
+        /// <summary>
+        /// Prepare image (simple) models
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the list of images
+        /// </returns>
+        Task<PictureOverviewModel> PreparePictureOverviewAsync(PictureModel pictureModel,
+            PictureOverviewModel pictureOverviewModel);
 
         /// <summary>
         /// Prepare category (simple) models

@@ -9,6 +9,6 @@ public class ProductOverview
     public string ShortDescription { get; set; }
     public decimal Price { get; set; }
     
-    public IList<PictureOverviewModel> PictureModels { get; set; }
+    public IList<string> UrlString { get; set; }
     
 }

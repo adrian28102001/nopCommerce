@@ -67,7 +67,6 @@ namespace Nop.Web.Factories
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
-        private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -801,17 +800,23 @@ namespace Nop.Web.Factories
         public async Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview)
         {
             if (product == null) throw new ArgumentNullException(nameof(product));
-            var pictureModel = new PictureModel();
-            var pictureOverviewModel = new PictureOverviewModel();
 
-            var imageModel = await PreparePictureOverviewAsync(pictureModel, pictureOverviewModel);
+            var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+            var pictureUrlList = new List<string>();
+        
+            foreach (var picture in pictures)
+            {
+                var pictureUrl = await _pictureService.GetPictureUrlAsync(picture);
+                pictureUrlList.Add(pictureUrl.Url);
+            }
+            
             
             var productMap = new ProductOverview
             {
                 Name = product.Name,
                 ShortDescription = product.ShortDescription,
                 Price = product.Price,
-                PictureModels = new[] { imageModel }
+                UrlString = pictureUrlList
             };
 
 
