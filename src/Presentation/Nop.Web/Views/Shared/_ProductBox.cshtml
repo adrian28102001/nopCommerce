@@ -63,7 +63,7 @@
             </a>
 
             <script> 
-                function BindpatientData(productId) {
+                function showProductOverview(productId) {
                     $.ajax({
                         url: "/Catalog/GetProductOverview/"+productId,
                         type: "GET",
@@ -91,7 +91,7 @@
              $(document).ready(function () {
                 $(document).on('click', '#previewButton_@Model.Id', function () {
                      $("#product-preview-details_@Model.Id").dialog({ width : 500, height: 500});   
-                    BindpatientData(@Model.Id);
+                    showProductOverview(@Model.Id);
                  });
              });
             </script>

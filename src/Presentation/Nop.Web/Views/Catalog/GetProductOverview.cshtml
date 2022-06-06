@@ -15,7 +15,7 @@
         <p> @Model.Name </p>
         <p> @Model.Price</p>
         <p> @Model.ShortDescription </p>
-        @foreach (var picture in Model.UrlString)
+        @foreach (var picture in Model.UrlsString)
         {
             <img id="productImagePreview" alt="" src="@picture?" width="100" height="100"/>
         }

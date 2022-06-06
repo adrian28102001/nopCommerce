@@ -803,12 +803,12 @@ namespace Nop.Web.Factories
 
             var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
            
-            var pictureUrlList = new List<string>();
+            var pictureUrlsList = new List<string>();
         
             foreach (var picture in pictures)
             {
                 var pictureUrl = await _pictureService.GetPictureUrlAsync(picture);
-                pictureUrlList.Add(pictureUrl.Url);
+                pictureUrlsList.Add(pictureUrl.Url);
             }
 
             var productMap = new ProductOverview
@@ -816,7 +816,7 @@ namespace Nop.Web.Factories
                 Name = product.Name,
                 ShortDescription = product.ShortDescription,
                 Price = product.Price,
-                UrlString = pictureUrlList
+                UrlsString = pictureUrlsList
             };
             
             return await Task.FromResult(productMap);

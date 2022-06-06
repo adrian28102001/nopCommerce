@@ -144,9 +144,7 @@ namespace Nop.Web.Controllers
             var templateViewPath = await _catalogModelFactory.PrepareCategoryTemplateViewPathAsync(category.CategoryTemplateId);
             return View(templateViewPath, model);
         }
-
-    
-
+        
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
