@@ -8,3 +8,9 @@
 <h2>@Model.Name - title</h2>
 <h2>@Model.Price - title</h2>
 <h2>@Model.ShortDescription - Descrption</h2>
+
+@foreach (var picture in Model.PictureModels)
+{
+    <p>Hii irl = @picture?.ImageUrl</p>
+    <img id ="productImage" alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+}

@@ -25,6 +25,7 @@
     var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
+
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture">
         @if (Model.PictureModels.Count > 1)
@@ -62,42 +63,22 @@
                 <div id="product-preview-details_@Model.Id" title="@(Model.SeName)">
                 </div>
             </a>
-                                                           
-            <script> 
+            
+                <script> 
                 function BindpatientData(productId) {
                     $.ajax({
                         url: "/Catalog/GetProductOverview/"+productId,
                         type: "GET",
-                        contentType: "application/json;charset=utf-8",
-                        dataType: "json",
                         success: function (result)
                         {
-                            debugger;
-                      
-                            if (result){
-                            $("link_@Model.Id .previewButton_@Model.Id").click(function(){
-                              $.ajax({url: "/Catalog/GetProductOverview/" + productId, success: function(result){
-                                $("#link_@Model.Id .product-preview-details_@Model.Id").html(result);
-                                $("#link_@Model.Id .product-preview-details_@Model.Id").load('/Catalog/GetProductOverview/@Model.Id');
-                                
-                                
-                              }});
-                            });    
-                            }
+                            $("#product-preview-details_" + productId).html(result);
                         },
                         error: function (errormessage) {
                             alert(errormessage.responseText);
                         }
                     });
                 }
-                
-                 $(document).ready(function () {
-                 $("#product-preview-details_@Model.Id").hide();                    
-                 $("#link_@Model.Id .previewButton_@Model.Id").hide();            
-                    
-                 });
-                 
-              
+            
              $(document).ready(function () {
                 $(document).on('mouseover', '#link_@Model.Id', function () {
                     $(this).find("#previewButton_@Model.Id").show();
@@ -109,18 +90,15 @@
                 });
              });
              
-                 $(document).ready(function () {
-                 $(document).on('click', '#previewButton_@Model.Id', function () {
-                 $("#product-preview-details_@Model.Id").dialog({ width : 1000, height: 1000});   
-                 BindpatientData(@Model.Id);
-
-                 }).on('mouseleave', '#link_@Model.Id', function () {             
+             $(document).ready(function () {
+                $(document).on('click', '#previewButton_@Model.Id', function () {
+                     $("#product-preview-details_@Model.Id").dialog({ width : 1000, height: 1000});   
+                    BindpatientData(@Model.Id);
                  });
              });
-               
             </script>
-        }
-    </div>
+                }
+            </div>
     <div class="details">
         <h2 class="product-title">
             <a href="@(Url.RouteUrl<Product>(new {SeName = Model.SeName }))">@Model.Name</a>

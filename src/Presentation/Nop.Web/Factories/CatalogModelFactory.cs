@@ -67,6 +67,7 @@ namespace Nop.Web.Factories
         private readonly IVendorService _vendorService;
         private readonly IWebHelper _webHelper;
         private readonly IWorkContext _workContext;
+        private readonly ICatalogModelFactory _catalogModelFactory;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
 
@@ -797,15 +798,41 @@ namespace Nop.Web.Factories
             return model;
         }
 
-        public Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview)
+        public async Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview)
         {
             if (product == null) throw new ArgumentNullException(nameof(product));
+            var pictureModel = new PictureModel();
+            var pictureOverviewModel = new PictureOverviewModel();
+
+            var imageModel = await PreparePictureOverviewAsync(pictureModel, pictureOverviewModel);
             
             var productMap = new ProductOverview
             {
-                Name = product.Name, ShortDescription = product.ShortDescription, Price = product.Price
+                Name = product.Name,
+                ShortDescription = product.ShortDescription,
+                Price = product.Price,
+                PictureModels = new[] { imageModel }
             };
-            return Task.FromResult(productMap);
+
+
+            return await Task.FromResult(productMap);
+        }
+
+        public Task<PictureOverviewModel> PreparePictureOverviewAsync(PictureModel pictureModel,
+            PictureOverviewModel pictureOverviewModel)
+        {
+            if (pictureModel == null) throw new ArgumentNullException(nameof(pictureModel));
+            pictureModel = new PictureModel();
+
+            var pictureMap = new PictureOverviewModel
+            {
+                Title = pictureModel.Title,
+                AlternateText = pictureModel.AlternateText,
+                ImageUrl = pictureModel.ImageUrl,
+                ThumbImageUrl = pictureModel.ThumbImageUrl,
+                FullSizeImageUrl = pictureModel.FullSizeImageUrl
+            };
+            return Task.FromResult(pictureMap);
         }
 
         /// <summary>

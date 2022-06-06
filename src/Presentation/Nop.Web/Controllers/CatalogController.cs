@@ -111,7 +111,8 @@ namespace Nop.Web.Controllers
             var productOverview = new ProductOverview();
             
             var model = await _catalogModelFactory.PrepareProductOverviewAsync(product, productOverview);
-
+            
+            
             return View(model);
         }
         
