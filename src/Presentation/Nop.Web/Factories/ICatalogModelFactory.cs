@@ -97,6 +97,15 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation
+        /// The task result contains the list of product models
+        /// </returns>
+        Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview);
+
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
         /// The task result contains the list of category (simple) models
         /// </returns>
         Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync();
