@@ -1,8 +1,6 @@
 
 
 /*********** CSS RESET **********/
-
-
 * {
   margin: 0;
   padding: 0;
@@ -8821,9 +8819,32 @@ label, label + * {
   border: 3px solid #fff;
   padding: 20px;
 }
+
 .float-child-product-overview{
   width: 50%;
   float: left;
   padding: 20px;
   border: 2px solid red;
+}
+
+.get-overview-product-field{
+  width: 100%;
+  padding: 6px 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+.get-overview-product-control{
+  width: 100%;
+  padding: 6px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+.get-overview-product-label{
+  font-size: 18px;
+}
+
+#productImagePreview{
+  border-radius: 8px;
 }
