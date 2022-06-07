@@ -6,7 +6,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 
 namespace Nop.Plugin.Orders.Webhook.Factory;
 
-public class WebhookFactory
+public class WebhookFactory : IWebhookFactory
 {
     private readonly IStoreContext _storeContext;
     private readonly ISettingService _settingService;

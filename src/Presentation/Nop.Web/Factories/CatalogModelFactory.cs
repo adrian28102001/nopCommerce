@@ -146,14 +146,13 @@ namespace Nop.Web.Factories
                 Id = int.Parse(elem.XPathSelectElement("Id").Value),
                 Name = elem.XPathSelectElement("Name").Value,
                 SeName = elem.XPathSelectElement("SeName").Value,
-
                 NumberOfProducts = !string.IsNullOrEmpty(elem.XPathSelectElement("NumberOfProducts").Value)
                     ? int.Parse(elem.XPathSelectElement("NumberOfProducts").Value)
                     : (int?)null,
-
                 IncludeInTopMenu = bool.Parse(elem.XPathSelectElement("IncludeInTopMenu").Value),
                 HaveSubCategories = bool.Parse(elem.XPathSelectElement("HaveSubCategories").Value),
-                Route = _nopUrlHelper.RouteGenericUrlAsync<Category>(new { SeName = elem.XPathSelectElement("SeName").Value }).Result
+                Route = _nopUrlHelper
+                    .RouteGenericUrlAsync<Category>(new { SeName = elem.XPathSelectElement("SeName").Value }).Result
             };
 
             return model;
@@ -191,10 +190,12 @@ namespace Nop.Web.Factories
                 var workingCurrency = await _workContext.GetWorkingCurrencyAsync();
 
                 if (result.From.HasValue)
-                    result.From = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(result.From.Value, workingCurrency);
+                    result.From =
+                        await _currencyService.ConvertToPrimaryStoreCurrencyAsync(result.From.Value, workingCurrency);
 
                 if (result.To.HasValue)
-                    result.To = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(result.To.Value, workingCurrency);
+                    result.To = await _currencyService.ConvertToPrimaryStoreCurrencyAsync(result.To.Value,
+                        workingCurrency);
             }
 
             return result;
@@ -209,7 +210,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the specification filter model
         /// </returns>
-        protected virtual async Task<SpecificationFilterModel> PrepareSpecificationFilterModel(IList<int> selectedOptions, IList<SpecificationAttributeOption> availableOptions)
+        protected virtual async Task<SpecificationFilterModel> PrepareSpecificationFilterModel(
+            IList<int> selectedOptions, IList<SpecificationAttributeOption> availableOptions)
         {
             var model = new SpecificationFilterModel();
 
@@ -221,7 +223,8 @@ namespace Nop.Web.Factories
 
                 foreach (var option in availableOptions)
                 {
-                    var attributeFilter = model.Attributes.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
+                    var attributeFilter =
+                        model.Attributes.FirstOrDefault(model => model.Id == option.SpecificationAttributeId);
                     if (attributeFilter == null)
                     {
                         var attribute = await _specificationAttributeService
@@ -258,7 +261,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the specification filter model
         /// </returns>
-        protected virtual async Task<ManufacturerFilterModel> PrepareManufacturerFilterModel(IList<int> selectedManufacturers, IList<Manufacturer> availableManufacturers)
+        protected virtual async Task<ManufacturerFilterModel> PrepareManufacturerFilterModel(
+            IList<int> selectedManufacturers, IList<Manufacturer> availableManufacturers)
         {
             var model = new ManufacturerFilterModel();
 
@@ -290,12 +294,13 @@ namespace Nop.Web.Factories
         /// <param name="selectedPriceRange">The selected price range to filter the products</param>
         /// <param name="availablePriceRange">The available price range to filter the products</param>
         /// <returns>The price range filter</returns>
-        protected virtual async Task<PriceRangeFilterModel> PreparePriceRangeFilterAsync(PriceRangeModel selectedPriceRange, PriceRangeModel availablePriceRange)
+        protected virtual async Task<PriceRangeFilterModel> PreparePriceRangeFilterAsync(
+            PriceRangeModel selectedPriceRange, PriceRangeModel availablePriceRange)
         {
             var model = new PriceRangeFilterModel();
 
             if (!availablePriceRange.To.HasValue || availablePriceRange.To <= 0
-                || availablePriceRange.To == availablePriceRange.From)
+                                                 || availablePriceRange.To == availablePriceRange.From)
             {
                 // filter by price isn't available
                 selectedPriceRange.From = null;
@@ -347,7 +352,8 @@ namespace Nop.Web.Factories
         /// <param name="products">The products</param>
         /// <param name="isFiltering">A value indicating that filtering has been applied</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model, IPagedList<Product> products, bool isFiltering = false)
+        protected virtual async Task PrepareCatalogProductsAsync(CatalogProductsModel model,
+            IPagedList<Product> products, bool isFiltering = false)
         {
             if (!string.IsNullOrEmpty(model.WarningMessage))
                 return;
@@ -374,7 +380,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the category model
         /// </returns>
-        public virtual async Task<CategoryModel> PrepareCategoryModelAsync(Category category, CatalogProductsCommand command)
+        public virtual async Task<CategoryModel> PrepareCategoryModelAsync(Category category,
+            CatalogProductsCommand command)
         {
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
@@ -399,13 +406,14 @@ namespace Nop.Web.Factories
             {
                 model.DisplayCategoryBreadcrumb = true;
 
-                model.CategoryBreadcrumb = await (await _categoryService.GetCategoryBreadCrumbAsync(category)).SelectAwait(async catBr =>
-                    new CategoryModel
-                    {
-                        Id = catBr.Id,
-                        Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
-                        SeName = await _urlRecordService.GetSeNameAsync(catBr)
-                    }).ToListAsync();
+                model.CategoryBreadcrumb = await (await _categoryService.GetCategoryBreadCrumbAsync(category))
+                    .SelectAwait(async catBr =>
+                        new CategoryModel
+                        {
+                            Id = catBr.Id,
+                            Name = await _localizationService.GetLocalizedAsync(catBr, x => x.Name),
+                            SeName = await _urlRecordService.GetSeNameAsync(catBr)
+                        }).ToListAsync();
             }
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -424,8 +432,10 @@ namespace Nop.Web.Factories
                     };
 
                     //prepare picture model
-                    var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey, curCategory,
-                        pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(),
+                    var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                        NopModelCacheDefaults.CategoryPictureModelKey, curCategory,
+                        pictureSize, true, await _workContext.GetWorkingLanguageAsync(),
+                        _webHelper.IsCurrentConnectionSecured(),
                         currentStore);
 
                     subCatModel.PictureModel = await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
@@ -455,9 +465,11 @@ namespace Nop.Web.Factories
             //featured products
             if (!_catalogSettings.IgnoreFeaturedProducts)
             {
-                var featuredProducts = await _productService.GetCategoryFeaturedProductsAsync(category.Id, currentStore.Id);
+                var featuredProducts =
+                    await _productService.GetCategoryFeaturedProductsAsync(category.Id, currentStore.Id);
                 if (featuredProducts != null)
-                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
+                    model.FeaturedProducts =
+                        (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
             }
 
             return model;
@@ -491,7 +503,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the category navigation model
         /// </returns>
-        public virtual async Task<CategoryNavigationModel> PrepareCategoryNavigationModelAsync(int currentCategoryId, int currentProductId)
+        public virtual async Task<CategoryNavigationModel> PrepareCategoryNavigationModelAsync(int currentCategoryId,
+            int currentProductId)
         {
             //get active category
             var activeCategoryId = 0;
@@ -511,8 +524,7 @@ namespace Nop.Web.Factories
             var cachedCategoriesModel = await PrepareCategorySimpleModelsAsync();
             var model = new CategoryNavigationModel
             {
-                CurrentCategoryId = activeCategoryId,
-                Categories = cachedCategoriesModel
+                CurrentCategoryId = activeCategoryId, Categories = cachedCategoriesModel
             };
 
             return model;
@@ -577,7 +589,8 @@ namespace Nop.Web.Factories
             var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
             var pictureSize = _mediaSettings.CategoryThumbPictureSize;
-            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryHomepageKey,
+            var categoriesCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                NopModelCacheDefaults.CategoryHomepageKey,
                 store, customerRoleIds, pictureSize, language, _webHelper.IsCurrentConnectionSecured());
 
             var model = await _staticCacheManager.GetAsync(categoriesCacheKey, async () =>
@@ -591,14 +604,16 @@ namespace Nop.Web.Factories
                         Name = await _localizationService.GetLocalizedAsync(category, x => x.Name),
                         Description = await _localizationService.GetLocalizedAsync(category, x => x.Description),
                         MetaKeywords = await _localizationService.GetLocalizedAsync(category, x => x.MetaKeywords),
-                        MetaDescription = await _localizationService.GetLocalizedAsync(category, x => x.MetaDescription),
+                        MetaDescription =
+                            await _localizationService.GetLocalizedAsync(category, x => x.MetaDescription),
                         MetaTitle = await _localizationService.GetLocalizedAsync(category, x => x.MetaTitle),
                         SeName = await _urlRecordService.GetSeNameAsync(category),
                     };
 
                     //prepare picture model
                     var secured = _webHelper.IsCurrentConnectionSecured();
-                    var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.CategoryPictureModelKey,
+                    var categoryPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                        NopModelCacheDefaults.CategoryPictureModelKey,
                         category, pictureSize, true, language, secured, store);
                     catModel.PictureModel = await _staticCacheManager.GetAsync(categoryPictureCacheKey, async () =>
                     {
@@ -608,8 +623,10 @@ namespace Nop.Web.Factories
                         (fullSizeImageUrl, picture) = await _pictureService.GetPictureUrlAsync(picture);
                         (imageUrl, _) = await _pictureService.GetPictureUrlAsync(picture, pictureSize);
 
-                        var titleLocale = await _localizationService.GetResourceAsync("Media.Category.ImageLinkTitleFormat");
-                        var altLocale = await _localizationService.GetResourceAsync("Media.Category.ImageAlternateTextFormat");
+                        var titleLocale =
+                            await _localizationService.GetResourceAsync("Media.Category.ImageLinkTitleFormat");
+                        var altLocale =
+                            await _localizationService.GetResourceAsync("Media.Category.ImageAlternateTextFormat");
                         return new PictureModel
                         {
                             FullSizeImageUrl = fullSizeImageUrl,
@@ -638,7 +655,7 @@ namespace Nop.Web.Factories
             var doc = await PrepareCategoryXmlDocumentAsync();
 
             var models = from xe in doc.Root.XPathSelectElements("CategorySimpleModel")
-                         select GetCategorySimpleModel(xe);
+                select GetCategorySimpleModel(xe);
 
             return models.ToList();
         }
@@ -656,11 +673,11 @@ namespace Nop.Web.Factories
             var doc = await PrepareCategoryXmlDocumentAsync();
 
             var model = from xe in doc.Descendants("CategorySimpleModel")
-                        where xe.XPathSelectElement("Id").Value == id.ToString()
-                        select xe;
+                where xe.XPathSelectElement("Id").Value == id.ToString()
+                select xe;
 
             var models = from xe in model.First().XPathSelectElements("SubCategories/CategorySimpleModel")
-                         select GetCategorySimpleModel(xe);
+                select GetCategorySimpleModel(xe);
 
             return models.ToList();
         }
@@ -674,7 +691,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the category products model
         /// </returns>
-        public virtual async Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category, CatalogProductsCommand command)
+        public virtual async Task<CatalogProductsModel> PrepareCategoryProductsModelAsync(Category category,
+            CatalogProductsCommand command)
         {
             if (category == null)
                 throw new ArgumentNullException(nameof(category));
@@ -682,10 +700,7 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new CatalogProductsModel
-            {
-                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
-            };
+            var model = new CatalogProductsModel { UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading };
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
@@ -718,7 +733,8 @@ namespace Nop.Web.Factories
                             categoryIds: categoryIds,
                             storeId: currentStore.Id,
                             visibleIndividuallyOnly: true,
-                            excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
+                            excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts &&
+                                                     !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                             orderBy: orderBy);
 
                         return products?.FirstOrDefault()?.Price ?? 0;
@@ -732,11 +748,7 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    availablePriceRange = new PriceRangeModel
-                    {
-                        From = category.PriceFrom,
-                        To = category.PriceTo
-                    };
+                    availablePriceRange = new PriceRangeModel { From = category.PriceFrom, To = category.PriceTo };
                 }
 
                 model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
@@ -748,7 +760,8 @@ namespace Nop.Web.Factories
 
             if (_catalogSettings.EnableSpecificationAttributeFiltering)
             {
-                model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+                model.SpecificationFilter =
+                    await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
             }
 
             //filterable manufacturers
@@ -759,7 +772,9 @@ namespace Nop.Web.Factories
                 model.ManufacturerFilter = await PrepareManufacturerFilterModel(command.ManufacturerIds, manufacturers);
             }
 
-            var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+            var filteredSpecs = command.SpecificationOptionIds is null
+                ? null
+                : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
 
             //products
             var products = await _productService.SearchProductsAsync(
@@ -768,7 +783,8 @@ namespace Nop.Web.Factories
                 categoryIds: categoryIds,
                 storeId: currentStore.Id,
                 visibleIndividuallyOnly: true,
-                excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
+                excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts &&
+                                         !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
                 manufacturerIds: command.ManufacturerIds,
@@ -781,6 +797,31 @@ namespace Nop.Web.Factories
             return model;
         }
 
+        public async Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview)
+        {
+            if (product == null) throw new ArgumentNullException(nameof(product));
+
+            var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+           
+            var pictureUrlsList = new List<string>();
+        
+            foreach (var picture in pictures)
+            {
+                var pictureUrl = await _pictureService.GetPictureUrlAsync(picture);
+                pictureUrlsList.Add(pictureUrl.Url);
+            }
+
+            var productMap = new ProductOverview
+            {
+                Name = product.Name,
+                ShortDescription = product.ShortDescription,
+                Price = product.Price,
+                UrlsString = pictureUrlsList
+            };
+            
+            return await Task.FromResult(productMap);
+        }
+        
         /// <summary>
         /// Prepare category (simple) models
         /// </summary>
@@ -810,7 +851,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the list of category (simple) models
         /// </returns>
-        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true)
+        public virtual async Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId,
+            bool loadSubCategories = true)
         {
             var result = new List<CategorySimpleModel>();
 
@@ -821,7 +863,8 @@ namespace Nop.Web.Factories
             //so we load all categories at once (we know they are cached)
             var store = await _storeContext.GetCurrentStoreAsync();
             var allCategories = await _categoryService.GetAllCategoriesAsync(storeId: store.Id);
-            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder).ToList();
+            var categories = allCategories.Where(c => c.ParentCategoryId == rootCategoryId).OrderBy(c => c.DisplayOrder)
+                .ToList();
             foreach (var category in categories)
             {
                 var categoryModel = new CategorySimpleModel
@@ -852,7 +895,7 @@ namespace Nop.Web.Factories
                 }
 
                 categoryModel.HaveSubCategories = categoryModel.SubCategories.Count > 0 &
-                    categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
+                                                  categoryModel.SubCategories.Any(x => x.IncludeInTopMenu);
 
                 result.Add(categoryModel);
             }
@@ -882,11 +925,7 @@ namespace Nop.Web.Factories
 
                 var xsSubmit = new XmlSerializer(typeof(List<CategorySimpleModel>));
 
-                var settings = new XmlWriterSettings
-                {
-                    Async = true,
-                    ConformanceLevel = ConformanceLevel.Auto
-                };
+                var settings = new XmlWriterSettings { Async = true, ConformanceLevel = ConformanceLevel.Auto };
 
                 await using var strWriter = new StringWriter();
                 await using var writer = XmlWriter.Create(strWriter, settings);
@@ -910,7 +949,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer model
         /// </returns>
-        public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
+        public virtual async Task<ManufacturerModel> PrepareManufacturerModelAsync(Manufacturer manufacturer,
+            CatalogProductsCommand command)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException(nameof(manufacturer));
@@ -924,7 +964,8 @@ namespace Nop.Web.Factories
                 Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
                 Description = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Description),
                 MetaKeywords = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaKeywords),
-                MetaDescription = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaDescription),
+                MetaDescription =
+                    await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaDescription),
                 MetaTitle = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaTitle),
                 SeName = await _urlRecordService.GetSeNameAsync(manufacturer),
                 CatalogProductsModel = await PrepareManufacturerProductsModelAsync(manufacturer, command)
@@ -935,9 +976,11 @@ namespace Nop.Web.Factories
             {
                 var store = await _storeContext.GetCurrentStoreAsync();
                 var storeId = store.Id;
-                var featuredProducts = await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, storeId);
+                var featuredProducts =
+                    await _productService.GetManufacturerFeaturedProductsAsync(manufacturer.Id, storeId);
                 if (featuredProducts != null)
-                    model.FeaturedProducts = (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
+                    model.FeaturedProducts =
+                        (await _productModelFactory.PrepareProductOverviewModelsAsync(featuredProducts)).ToList();
             }
 
             return model;
@@ -952,7 +995,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer products model
         /// </returns>
-        public virtual async Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer, CatalogProductsCommand command)
+        public virtual async Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer,
+            CatalogProductsCommand command)
         {
             if (manufacturer == null)
                 throw new ArgumentNullException(nameof(manufacturer));
@@ -960,10 +1004,7 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new CatalogProductsModel
-            {
-                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
-            };
+            var model = new CatalogProductsModel { UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading };
 
             var manufacturerIds = new List<int> { manufacturer.Id };
             var currentStore = await _storeContext.GetCurrentStoreAsync();
@@ -991,7 +1032,8 @@ namespace Nop.Web.Factories
                             manufacturerIds: manufacturerIds,
                             storeId: currentStore.Id,
                             visibleIndividuallyOnly: true,
-                            excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
+                            excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts &&
+                                                     !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                             orderBy: orderBy);
 
                         return products?.FirstOrDefault()?.Price ?? 0;
@@ -1007,8 +1049,7 @@ namespace Nop.Web.Factories
                 {
                     availablePriceRange = new PriceRangeModel
                     {
-                        From = manufacturer.PriceFrom,
-                        To = manufacturer.PriceTo
+                        From = manufacturer.PriceFrom, To = manufacturer.PriceTo
                     };
                 }
 
@@ -1021,10 +1062,13 @@ namespace Nop.Web.Factories
 
             if (_catalogSettings.EnableSpecificationAttributeFiltering)
             {
-                model.SpecificationFilter = await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
+                model.SpecificationFilter =
+                    await PrepareSpecificationFilterModel(command.SpecificationOptionIds, filterableOptions);
             }
 
-            var filteredSpecs = command.SpecificationOptionIds is null ? null : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
+            var filteredSpecs = command.SpecificationOptionIds is null
+                ? null
+                : filterableOptions.Where(fo => command.SpecificationOptionIds.Contains(fo.Id)).ToList();
 
             //products
             var products = await _productService.SearchProductsAsync(
@@ -1033,7 +1077,8 @@ namespace Nop.Web.Factories
                 manufacturerIds: manufacturerIds,
                 storeId: currentStore.Id,
                 visibleIndividuallyOnly: true,
-                excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts && !_catalogSettings.IncludeFeaturedProductsInNormalLists,
+                excludeFeaturedProducts: !_catalogSettings.IgnoreFeaturedProducts &&
+                                         !_catalogSettings.IncludeFeaturedProductsInNormalLists,
                 priceMin: selectedPriceRange?.From,
                 priceMax: selectedPriceRange?.To,
                 filteredSpecOptions: filteredSpecs,
@@ -1085,14 +1130,16 @@ namespace Nop.Web.Factories
                     Name = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Name),
                     Description = await _localizationService.GetLocalizedAsync(manufacturer, x => x.Description),
                     MetaKeywords = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaKeywords),
-                    MetaDescription = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaDescription),
+                    MetaDescription =
+                        await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaDescription),
                     MetaTitle = await _localizationService.GetLocalizedAsync(manufacturer, x => x.MetaTitle),
                     SeName = await _urlRecordService.GetSeNameAsync(manufacturer),
                 };
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.ManufacturerThumbPictureSize;
-                var manufacturerPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerPictureModelKey,
+                var manufacturerPictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                    NopModelCacheDefaults.ManufacturerPictureModelKey,
                     manufacturer, pictureSize, true, await _workContext.GetWorkingLanguageAsync(),
                     _webHelper.IsCurrentConnectionSecured(), currentStore);
                 modelMan.PictureModel = await _staticCacheManager.GetAsync(manufacturerPictureCacheKey, async () =>
@@ -1107,8 +1154,14 @@ namespace Nop.Web.Factories
                     {
                         FullSizeImageUrl = fullSizeImageUrl,
                         ImageUrl = imageUrl,
-                        Title = string.Format(await _localizationService.GetResourceAsync("Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
-                        AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
+                        Title =
+                            string.Format(
+                                await _localizationService.GetResourceAsync(
+                                    "Media.Manufacturer.ImageLinkTitleFormat"), modelMan.Name),
+                        AlternateText =
+                            string.Format(
+                                await _localizationService.GetResourceAsync(
+                                    "Media.Manufacturer.ImageAlternateTextFormat"), modelMan.Name)
                     };
 
                     return pictureModel;
@@ -1128,13 +1181,15 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer navigation model
         /// </returns>
-        public virtual async Task<ManufacturerNavigationModel> PrepareManufacturerNavigationModelAsync(int currentManufacturerId)
+        public virtual async Task<ManufacturerNavigationModel> PrepareManufacturerNavigationModelAsync(
+            int currentManufacturerId)
         {
             var language = await _workContext.GetWorkingLanguageAsync();
             var customer = await _workContext.GetCurrentCustomerAsync();
             var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
             var store = await _storeContext.GetCurrentStoreAsync();
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.ManufacturerNavigationModelKey,
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                NopModelCacheDefaults.ManufacturerNavigationModelKey,
                 currentManufacturerId, language, customerRoleIds, store);
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
@@ -1142,10 +1197,7 @@ namespace Nop.Web.Factories
 
                 var manufacturers = await _manufacturerService.GetAllManufacturersAsync(storeId: store.Id,
                     pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay);
-                var model = new ManufacturerNavigationModel
-                {
-                    TotalManufacturers = manufacturers.TotalCount
-                };
+                var model = new ManufacturerNavigationModel { TotalManufacturers = manufacturers.TotalCount };
 
                 foreach (var manufacturer in manufacturers)
                 {
@@ -1211,7 +1263,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the vendor products model
         /// </returns>
-        public virtual async Task<CatalogProductsModel> PrepareVendorProductsModelAsync(Vendor vendor, CatalogProductsCommand command)
+        public virtual async Task<CatalogProductsModel> PrepareVendorProductsModelAsync(Vendor vendor,
+            CatalogProductsCommand command)
         {
             if (vendor == null)
                 throw new ArgumentNullException(nameof(vendor));
@@ -1219,10 +1272,7 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new CatalogProductsModel
-            {
-                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
-            };
+            var model = new CatalogProductsModel { UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading };
 
             //sorting
             await PrepareSortingOptionsAsync(model, command);
@@ -1261,11 +1311,7 @@ namespace Nop.Web.Factories
                 }
                 else
                 {
-                    availablePriceRange = new PriceRangeModel
-                    {
-                        From = vendor.PriceFrom,
-                        To = vendor.PriceTo
-                    };
+                    availablePriceRange = new PriceRangeModel { From = vendor.PriceFrom, To = vendor.PriceTo };
                 }
 
                 model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
@@ -1315,8 +1361,10 @@ namespace Nop.Web.Factories
 
                 //prepare picture model
                 var pictureSize = _mediaSettings.VendorThumbPictureSize;
-                var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(NopModelCacheDefaults.VendorPictureModelKey,
-                    vendor, pictureSize, true, await _workContext.GetWorkingLanguageAsync(), _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
+                var pictureCacheKey = _staticCacheManager.PrepareKeyForDefaultCache(
+                    NopModelCacheDefaults.VendorPictureModelKey,
+                    vendor, pictureSize, true, await _workContext.GetWorkingLanguageAsync(),
+                    _webHelper.IsCurrentConnectionSecured(), await _storeContext.GetCurrentStoreAsync());
                 vendorModel.PictureModel = await _staticCacheManager.GetAsync(pictureCacheKey, async () =>
                 {
                     var picture = await _pictureService.GetPictureByIdAsync(vendor.PictureId);
@@ -1329,8 +1377,14 @@ namespace Nop.Web.Factories
                     {
                         FullSizeImageUrl = fullSizeImageUrl,
                         ImageUrl = imageUrl,
-                        Title = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageLinkTitleFormat"), vendorModel.Name),
-                        AlternateText = string.Format(await _localizationService.GetResourceAsync("Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
+                        Title =
+                            string.Format(
+                                await _localizationService.GetResourceAsync("Media.Vendor.ImageLinkTitleFormat"),
+                                vendorModel.Name),
+                        AlternateText =
+                            string.Format(
+                                await _localizationService.GetResourceAsync(
+                                    "Media.Vendor.ImageAlternateTextFormat"), vendorModel.Name)
                     };
 
                     return pictureModel;
@@ -1354,11 +1408,9 @@ namespace Nop.Web.Factories
             var cacheKey = NopModelCacheDefaults.VendorNavigationModelKey;
             var cachedModel = await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var vendors = await _vendorService.GetAllVendorsAsync(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
-                var model = new VendorNavigationModel
-                {
-                    TotalVendors = vendors.TotalCount
-                };
+                var vendors =
+                    await _vendorService.GetAllVendorsAsync(pageSize: _vendorSettings.VendorsBlockItemsToDisplay);
+                var model = new VendorNavigationModel { TotalVendors = vendors.TotalCount };
 
                 foreach (var vendor in vendors)
                 {
@@ -1388,7 +1440,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the product tags model
         /// </returns>
-        public virtual async Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync(int numberTagsToReturn = 0)
+        public virtual async Task<PopularProductTagsModel> PreparePopularProductTagsModelAsync(
+            int numberTagsToReturn = 0)
         {
             var model = new PopularProductTagsModel();
 
@@ -1429,7 +1482,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the products by tag model
         /// </returns>
-        public virtual async Task<ProductsByTagModel> PrepareProductsByTagModelAsync(ProductTag productTag, CatalogProductsCommand command)
+        public virtual async Task<ProductsByTagModel> PrepareProductsByTagModelAsync(ProductTag productTag,
+            CatalogProductsCommand command)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
@@ -1457,7 +1511,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the ag products model
         /// </returns>
-        public virtual async Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag, CatalogProductsCommand command)
+        public virtual async Task<CatalogProductsModel> PrepareTagProductsModelAsync(ProductTag productTag,
+            CatalogProductsCommand command)
         {
             if (productTag == null)
                 throw new ArgumentNullException(nameof(productTag));
@@ -1465,17 +1520,15 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new CatalogProductsModel
-            {
-                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
-            };
+            var model = new CatalogProductsModel { UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading };
 
             //sorting
             await PrepareSortingOptionsAsync(model, command);
             //view mode
             await PrepareViewModesAsync(model, command);
             //page size
-            await PreparePageSizeOptionsAsync(model, command, _catalogSettings.ProductsByTagAllowCustomersToSelectPageSize,
+            await PreparePageSizeOptionsAsync(model, command,
+                _catalogSettings.ProductsByTagAllowCustomersToSelectPageSize,
                 _catalogSettings.ProductsByTagPageSizeOptions, _catalogSettings.ProductsByTagPageSize);
 
             //price range
@@ -1509,8 +1562,7 @@ namespace Nop.Web.Factories
                 {
                     availablePriceRange = new PriceRangeModel
                     {
-                        From = _catalogSettings.ProductsByTagPriceFrom,
-                        To = _catalogSettings.ProductsByTagPriceTo
+                        From = _catalogSettings.ProductsByTagPriceFrom, To = _catalogSettings.ProductsByTagPriceTo
                     };
                 }
 
@@ -1551,15 +1603,13 @@ namespace Nop.Web.Factories
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new CatalogProductsModel
-            {
-                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
-            };
+            var model = new CatalogProductsModel { UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading };
 
             var currentStore = await _storeContext.GetCurrentStoreAsync();
 
             //page size
-            await PreparePageSizeOptionsAsync(model, command, _catalogSettings.NewProductsAllowCustomersToSelectPageSize,
+            await PreparePageSizeOptionsAsync(model, command,
+                _catalogSettings.NewProductsAllowCustomersToSelectPageSize,
                 _catalogSettings.NewProductsPageSizeOptions, _catalogSettings.NewProductsPageSize);
 
             //products
@@ -1585,7 +1635,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the search model
         /// </returns>
-        public virtual async Task<SearchModel> PrepareSearchModelAsync(SearchModel model, CatalogProductsCommand command)
+        public virtual async Task<SearchModel> PrepareSearchModelAsync(SearchModel model,
+            CatalogProductsCommand command)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -1609,11 +1660,7 @@ namespace Nop.Web.Factories
                         categoryBreadcrumb += " >> ";
                 }
 
-                categoriesModels.Add(new SearchModel.CategoryModel
-                {
-                    Id = c.Id,
-                    Breadcrumb = categoryBreadcrumb
-                });
+                categoriesModels.Add(new SearchModel.CategoryModel { Id = c.Id, Breadcrumb = categoryBreadcrumb });
             }
 
             if (categoriesModels.Any())
@@ -1621,17 +1668,14 @@ namespace Nop.Web.Factories
                 //first empty entry
                 model.AvailableCategories.Add(new SelectListItem
                 {
-                    Value = "0",
-                    Text = await _localizationService.GetResourceAsync("Common.All")
+                    Value = "0", Text = await _localizationService.GetResourceAsync("Common.All")
                 });
                 //all other categories
                 foreach (var c in categoriesModels)
                 {
                     model.AvailableCategories.Add(new SelectListItem
                     {
-                        Value = c.Id.ToString(),
-                        Text = c.Breadcrumb,
-                        Selected = model.cid == c.Id
+                        Value = c.Id.ToString(), Text = c.Breadcrumb, Selected = model.cid == c.Id
                     });
                 }
             }
@@ -1641,8 +1685,7 @@ namespace Nop.Web.Factories
             {
                 model.AvailableManufacturers.Add(new SelectListItem
                 {
-                    Value = "0",
-                    Text = await _localizationService.GetResourceAsync("Common.All")
+                    Value = "0", Text = await _localizationService.GetResourceAsync("Common.All")
                 });
                 foreach (var m in manufacturers)
                     model.AvailableManufacturers.Add(new SelectListItem
@@ -1661,8 +1704,7 @@ namespace Nop.Web.Factories
                 {
                     model.AvailableVendors.Add(new SelectListItem
                     {
-                        Value = "0",
-                        Text = await _localizationService.GetResourceAsync("Common.All")
+                        Value = "0", Text = await _localizationService.GetResourceAsync("Common.All")
                     });
                     foreach (var vendor in vendors)
                         model.AvailableVendors.Add(new SelectListItem
@@ -1688,15 +1730,13 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the search products model
         /// </returns>
-        public virtual async Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command)
+        public virtual async Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel,
+            CatalogProductsCommand command)
         {
             if (command == null)
                 throw new ArgumentNullException(nameof(command));
 
-            var model = new CatalogProductsModel
-            {
-                UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading
-            };
+            var model = new CatalogProductsModel { UseAjaxLoading = _catalogSettings.UseAjaxCatalogProductsLoading };
 
             //sorting
             await PrepareSortingOptionsAsync(model, command);
@@ -1721,7 +1761,8 @@ namespace Nop.Web.Factories
                 if (searchTerms.Length < _catalogSettings.ProductSearchTermMinimumLength)
                 {
                     model.WarningMessage =
-                        string.Format(await _localizationService.GetResourceAsync("Search.SearchTermMinimumLengthIsNCharacters"),
+                        string.Format(
+                            await _localizationService.GetResourceAsync("Search.SearchTermMinimumLengthIsNCharacters"),
                             _catalogSettings.ProductSearchTermMinimumLength);
                 }
                 else
@@ -1793,12 +1834,12 @@ namespace Nop.Web.Factories
                         {
                             availablePriceRange = new PriceRangeModel
                             {
-                                From = _catalogSettings.SearchPagePriceFrom,
-                                To = _catalogSettings.SearchPagePriceTo
+                                From = _catalogSettings.SearchPagePriceFrom, To = _catalogSettings.SearchPagePriceTo
                             };
                         }
 
-                        model.PriceRangeFilter = await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
+                        model.PriceRangeFilter =
+                            await PreparePriceRangeFilterAsync(selectedPriceRange, availablePriceRange);
                     }
 
                     //products
@@ -1830,12 +1871,7 @@ namespace Nop.Web.Factories
                         }
                         else
                         {
-                            searchTerm = new SearchTerm
-                            {
-                                Keyword = searchTerms,
-                                StoreId = currentStore.Id,
-                                Count = 1
-                            };
+                            searchTerm = new SearchTerm { Keyword = searchTerms, StoreId = currentStore.Id, Count = 1 };
                             await _searchTermService.InsertSearchTermAsync(searchTerm);
                         }
                     }
@@ -1907,7 +1943,13 @@ namespace Nop.Web.Factories
 
             //order sorting options
             var orderedActiveSortingOptions = activeSortingOptionsIds
-                .Select(id => new { Id = id, Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order) ? order : id })
+                .Select(id => new
+                {
+                    Id = id,
+                    Order = _catalogSettings.ProductSortingEnumDisplayOrder.TryGetValue(id, out var order)
+                        ? order
+                        : id
+                })
                 .OrderBy(option => option.Order).ToList();
 
             model.AllowProductSorting = true;
@@ -2002,7 +2044,8 @@ namespace Nop.Web.Factories
                         {
                             Text = pageSize,
                             Value = pageSize,
-                            Selected = pageSize.Equals(command.PageSize.ToString(), StringComparison.InvariantCultureIgnoreCase)
+                            Selected = pageSize.Equals(command.PageSize.ToString(),
+                                StringComparison.InvariantCultureIgnoreCase)
                         });
                     }
 

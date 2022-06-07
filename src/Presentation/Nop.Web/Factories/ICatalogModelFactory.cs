@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Vendors;
 using Nop.Web.Models.Catalog;
+using Nop.Web.Models.Media;
 
 namespace Nop.Web.Factories
 {
@@ -97,6 +98,15 @@ namespace Nop.Web.Factories
         /// </summary>
         /// <returns>
         /// A task that represents the asynchronous operation
+        /// The task result contains the list of product models
+        /// </returns>
+       Task<ProductOverview> PrepareProductOverviewAsync(Product product, ProductOverview productOverview);
+        
+        /// <summary>
+        /// Prepare category (simple) models
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
         /// The task result contains the list of category (simple) models
         /// </returns>
         Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync();
@@ -110,7 +120,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the list of category (simple) models
         /// </returns>
-        Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId, bool loadSubCategories = true);
+        Task<List<CategorySimpleModel>> PrepareCategorySimpleModelsAsync(int rootCategoryId,
+            bool loadSubCategories = true);
 
         /// <summary>
         /// Prepare category (simple) xml document
@@ -134,7 +145,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer model
         /// </returns>
-        Task<ManufacturerModel> PrepareManufacturerModelAsync(Manufacturer manufacturer, CatalogProductsCommand command);
+        Task<ManufacturerModel>
+            PrepareManufacturerModelAsync(Manufacturer manufacturer, CatalogProductsCommand command);
 
         /// <summary>
         /// Prepares the manufacturer products model
@@ -145,7 +157,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the manufacturer products model
         /// </returns>
-        Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer, CatalogProductsCommand command);
+        Task<CatalogProductsModel> PrepareManufacturerProductsModelAsync(Manufacturer manufacturer,
+            CatalogProductsCommand command);
 
         /// <summary>
         /// Prepare manufacturer template view path
@@ -294,7 +307,8 @@ namespace Nop.Web.Factories
         /// A task that represents the asynchronous operation
         /// The task result contains the search products model
         /// </returns>
-        Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel, CatalogProductsCommand command);
+        Task<CatalogProductsModel> PrepareSearchProductsModelAsync(SearchModel searchModel,
+            CatalogProductsCommand command);
 
         /// <summary>
         /// Prepare search box model

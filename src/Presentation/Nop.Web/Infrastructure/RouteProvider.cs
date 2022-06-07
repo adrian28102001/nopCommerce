@@ -480,11 +480,10 @@ namespace Nop.Web.Infrastructure
                 pattern: $"topic/authenticate",
                 defaults: new { controller = "Topic", action = "Authenticate" });
 
-            //prepare top menu (AJAX)
             endpointRouteBuilder.MapControllerRoute(name: "GetCatalogRoot",
                 pattern: $"catalog/getcatalogroot",
                 defaults: new { controller = "Catalog", action = "GetCatalogRoot" });
-
+            
             endpointRouteBuilder.MapControllerRoute(name: "GetCatalogSubCategories",
                 pattern: $"catalog/getcatalogsubcategories",
                 defaults: new { controller = "Catalog", action = "GetCatalogSubCategories" });

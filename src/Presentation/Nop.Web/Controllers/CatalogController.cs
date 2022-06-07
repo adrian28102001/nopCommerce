@@ -105,7 +105,15 @@ namespace Nop.Web.Controllers
         #endregion
 
         #region Categories
-
+        public virtual async Task<IActionResult> GetProductOverview(int id)
+        {
+            var product = await _productService.GetProductByIdAsync(id);
+            var productOverview = new ProductOverview();
+            var model = await _catalogModelFactory.PrepareProductOverviewAsync(product, productOverview);
+            
+            return View(model);
+        }
+        
         public virtual async Task<IActionResult> Category(int categoryId, CatalogProductsCommand command)
         {
             var category = await _categoryService.GetCategoryByIdAsync(categoryId);
@@ -136,7 +144,7 @@ namespace Nop.Web.Controllers
             var templateViewPath = await _catalogModelFactory.PrepareCategoryTemplateViewPathAsync(category.CategoryTemplateId);
             return View(templateViewPath, model);
         }
-
+        
         //ignore SEO friendly URLs checks
         [CheckLanguageSeoCode(true)]
         public virtual async Task<IActionResult> GetCategoryProducts(int categoryId, CatalogProductsCommand command)
@@ -510,6 +518,8 @@ namespace Nop.Web.Controllers
 
             return Task.FromResult(isAvailable);
         }
+        
+        
 
         #endregion
     }

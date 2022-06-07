@@ -655,6 +655,9 @@ i.false-icon {
   padding: 7px 10px 3px 10px;
   line-height: 24px;
 }
+.product-preview-details{
+  height: 30px;
+}
 
 .requirement-container.requirement-group > .requirement-heading {
   height: 30px;

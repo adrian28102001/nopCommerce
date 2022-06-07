@@ -25,6 +25,7 @@
     var addtowishlistlink = Url.RouteUrl("AddProductToCart-Catalog", new { productId = Model.Id, shoppingCartTypeId = (int)ShoppingCartType.Wishlist, quantity = quantity });
     var addtocomparelink = Url.RouteUrl("AddProductToCompare", new { productId = Model.Id });
 }
+
 <div class="product-item" data-productid="@Model.Id">
     <div class="picture">
         @if (Model.PictureModels.Count > 1)
@@ -34,7 +35,7 @@
                     @foreach (var picture in Model.PictureModels)
                     {
                         <a class="swiper-slide" href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture.Title">
-                            <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title" />
+                            <img alt="@picture.AlternateText" src="@picture.ImageUrl" title="@picture.Title"/>
                         </a>
                     }
                 </div>
@@ -54,14 +55,52 @@
         else
         {
             var picture = Model.PictureModels.FirstOrDefault();
-            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))" title="@picture?.Title">
-                <img alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title" />
+            <a id="link_@Model.Id" title="@picture?.Title">
+                <img id="productImage" alt="@picture?.AlternateText" src="@picture?.ImageUrl" title="@picture?.Title"/>
+                <input id="previewButton_@Model.Id" type="button" class="product-box-add-to-cart-button-preview" value="Preview"/>
+                <div id="product-preview-details_@Model.Id" title="@(Model.SeName)">
+                </div>
             </a>
+
+            <script> 
+                function showProductOverview(productId) {
+                    $.ajax({
+                        url: "/Catalog/GetProductOverview/"+productId,
+                        type: "GET",
+                        success: function (result)
+                        {
+                            $("#product-preview-details_" + productId).html(result);
+                        },
+                        error: function (errormessage) {
+                            alert(errormessage.responseText);
+                        }
+                    });
+                }
+            
+             $(document).ready(function () {
+                $(document).on('mouseover', '#link_@Model.Id', function () {
+                    $(this).find("#previewButton_@Model.Id").show();
+                    $(this).find("#productImage").hide();
+                    $(this).clickable(false);
+                }).on('mouseleave', '#link_@Model.Id', function () {
+                    $(this).find("#previewButton_@Model.Id").hide();
+                    $(this).find("#productImage").show();
+                });
+             });
+             
+             $(document).ready(function () {
+                $(document).on('click', '#previewButton_@Model.Id', function () {
+                     $("#product-preview-details_@Model.Id").dialog({ width : 600, height: 600});   
+                    showProductOverview(@Model.Id);
+                 });
+             });
+            </script>
         }
     </div>
+    
     <div class="details">
         <h2 class="product-title">
-            <a href="@(Url.RouteUrl<Product>(new {SeName = Model.SeName }))">@Model.Name</a>
+            <a href="@(Url.RouteUrl<Product>(new { SeName = Model.SeName }))">@Model.Name</a>
         </h2>
         @if (catalogSettings.ShowSkuOnCatalogPages && !string.IsNullOrEmpty(Model.Sku))
         {

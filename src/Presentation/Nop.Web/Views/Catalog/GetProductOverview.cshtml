@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+@{
+    Layout = null;
+}
+
+@model ProductOverview
+
+<fieldset disabled>
+    <div class="get-overview-product-field">
+        <label class="get-overview-product-label">Title:</label>
+        <div class="get-overview-product-control">
+            <input class="input" type="text" placeholder="@Model.Name">
+        </div>
+    </div>
+
+    <div class="get-overview-product-field">
+        <label class="get-overview-product-label">Price:</label>
+        <div class="get-overview-product-control">
+            <input class="get-overview-product-input" type="text" placeholder="@Model.Price">
+        </div>
+    </div>
+    <div class="get-overview-product-field">
+        <label class="get-overview-product-label">Description:</label>
+        <div class="get-overview-product-control">
+            <input class="input" type="text" placeholder="@Model.ShortDescription">
+        </div>
+    </div>
+    <div class="get-overview-product-field">
+        <label class="get-overview-product-label">Images:</label>
+        <div class="get-overview-product-control">
+            @foreach (var picture in Model.UrlsString)
+            {
+                <img id="productImagePreview" alt="" src="@picture?" width="100" height="100"/>
+            }
+        </div>
+    </div>
+</fieldset>
