@@ -540,6 +540,11 @@ namespace Nop.Core.Domain.Catalog
         /// Gets or sets the date and time of product update
         /// </summary>
         public DateTime UpdatedOnUtc { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the boolean of exported products
+        /// </summary>
+        public bool Exported { get; set; }
 
         /// <summary>
         /// Gets or sets the product type
