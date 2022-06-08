@@ -4,7 +4,7 @@ using Nop.Data.Mapping;
 
 namespace Nop.Data.Migrations;
 
-[NopMigration("2022/06/07 22:00:00", "Product export column", MigrationProcessType.Update)]
+[NopMigration("2022/06/08 22:00:00", "Product export column", MigrationProcessType.Update)]
 public class AddExportToProduct : AutoReversingMigration
 {
     public override void Up()
@@ -15,8 +15,8 @@ public class AddExportToProduct : AutoReversingMigration
             Alter.Table(NameCompatibilityManager.GetTableName(typeof(Product)))
                 .AddColumn(nameof(Product.Exported))
                 .AsBoolean()
-                .WithDefaultValue(false)
-                .Nullable();
+                .NotNullable()
+                .SetExistingRowsTo(false);
         }
     }
 }
