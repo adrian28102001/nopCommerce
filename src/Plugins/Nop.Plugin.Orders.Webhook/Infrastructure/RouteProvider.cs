@@ -8,7 +8,7 @@ public class RouteProvider: IRouteProvider
 {
     public void RegisterRoutes(IEndpointRouteBuilder endpointRouteBuilder)
     {
-        endpointRouteBuilder.MapControllerRoute("Plugin.Payments.Orders.Webhook", "Plugins/OrderWebhook/WConfigure",
+        endpointRouteBuilder.MapControllerRoute("Plugin.Payments.Orders.Webhook", "Plugins/OrderWebhook/Configure",
             new { controller = "OrderWebhook", action = "Configure" });
 
     }

@@ -8,6 +8,10 @@ using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Product.Backup.Controllers;
 
+[Area(AreaNames.Admin)]
+[AutoValidateAntiforgeryToken]
+[ValidateIpAddress]
+[AuthorizeAdmin]
 public class BackupController: BasePluginController
 {
     private readonly IPermissionService _permissionService;
@@ -27,7 +31,7 @@ public class BackupController: BasePluginController
             return AccessDeniedView();
 
         //prepare model
-        var models = _productService.GetFiveUnexportedProductsAsync();
-        return View();
+        var model = _productService.GetFiveUnexportedProductsAsync();
+        return View("~/Plugins/Product.Backup/Views/Configure.cshtml", model);
     }
 }
