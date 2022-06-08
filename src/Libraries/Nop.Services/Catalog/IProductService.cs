@@ -18,6 +18,13 @@ namespace Nop.Services.Catalog
         #region Products
 
         /// <summary>
+        /// Get first five unexported products
+        /// </summary>
+        /// <param name="product">Product</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task<List<Product>> GetFiveUnexportedProductsAsync();
+        
+        /// <summary>
         /// Delete a product
         /// </summary>
         /// <param name="product">Product</param>

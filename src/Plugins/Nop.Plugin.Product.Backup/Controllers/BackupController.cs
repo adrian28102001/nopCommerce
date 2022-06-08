@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Nop.Services.Catalog;
+using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
@@ -8,11 +10,24 @@ namespace Nop.Plugin.Product.Backup.Controllers;
 
 public class BackupController: BasePluginController
 {
-    
+    private readonly IPermissionService _permissionService;
+    private readonly IProductService _productService;
+
+    public BackupController(IPermissionService permissionService, IProductService productService)
+    {
+        _permissionService = permissionService;
+        _productService = productService;
+    }
+
     [AuthorizeAdmin]
     [Area(AreaNames.Admin)]
-    public virtual  Task<IActionResult> Configure()
+    public virtual async Task<IActionResult> Configure()
     {
-        return Task.FromResult<IActionResult>(View());
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
+            return AccessDeniedView();
+
+        //prepare model
+        var models = _productService.GetFiveUnexportedProductsAsync();
+        return View();
     }
 }

@@ -752,7 +752,11 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _productModelFactory.PrepareProductSearchModelAsync(new ProductSearchModel());
-
+            var models = await _productService.GetFiveUnexportedProductsAsync();
+            foreach (var m in models)
+            {
+                Console.Write(m.Name);
+            }
             return View(model);
         }
 

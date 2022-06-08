@@ -15,7 +15,7 @@ namespace Nop.Data
     public partial interface IRepository<TEntity> where TEntity : BaseEntity
     {
         #region Methods
-
+        
         /// <summary>
         /// Get the entity entry
         /// </summary>
