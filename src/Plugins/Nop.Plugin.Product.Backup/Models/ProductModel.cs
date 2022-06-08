@@ -2,7 +2,7 @@
 
 namespace Nop.Plugin.Product.Backup.Models;
 
-public class ProductPlugin 
+public class ProductModel 
 {
     public int ProductTypeId { get; set; } 
     public string Name { get; set; }
@@ -14,9 +14,5 @@ public class ProductPlugin
     public decimal Price { get; set; }
     public bool Exported { get; set; }
     public DateTime CreatedOnUtc { get; set; }
-
-    /// <summary>
-    /// Gets or sets the date and time of product update
-    /// </summary>
     public DateTime UpdatedOnUtc { get; set; }
 }

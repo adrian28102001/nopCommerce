@@ -10,7 +10,6 @@ public class RouteProvider: IRouteProvider
     {
         endpointRouteBuilder.MapControllerRoute("Plugin.Product.Backup", "Plugins/Backup/Configure",
             new { controller = "Backup", action = "Configure" });
-
     }
     public int Priority { get; }
 }
