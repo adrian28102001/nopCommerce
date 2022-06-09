@@ -25,7 +25,18 @@
         </div>
     </div>
 </div>
-
+<div class="card-body">    
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductBackupTimer_OverrideForStore" asp-input="ProductBackupTimer" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductBackupTimer" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductBackupTimer" />
+            <span asp-validation-for="ProductBackupTimer"></span>
+        </div>
+    </div>
+</div>
 <div class="card-body">    
     <div class="form-group row">
         <div class="col-md-3">

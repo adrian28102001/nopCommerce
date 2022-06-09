@@ -76,6 +76,8 @@ public class BackupController : BasePluginController
             model.BackupConfigurationEnabled_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.ProcessingProductsNumber,
             model.ProcessingProductsNumber_OverrideForStore, storeScope, false);
+        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.ProductBackupTimer,
+            model.ProductBackupTimer_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.ProductBackupStoragePath,
             model.ProductBackupStoragePath_OverrideForStore, storeScope, false);
 

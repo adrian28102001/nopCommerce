@@ -16,6 +16,7 @@ public class AdminMapperConfiguration: Profile, IOrderedMapperProfile
         CreateMap<ProductBackupSettings, ProductBackupSettingsModel>()
             .ForMember(model => model.BackupConfigurationEnabled_OverrideForStore,options => options.Ignore())
             .ForMember(model => model.ProcessingProductsNumber_OverrideForStore, options => options.Ignore())
+            .ForMember(model => model.ProductBackupTimer_OverrideForStore, options => options.Ignore())
             .ForMember(model => model.ProductBackupStoragePath_OverrideForStore, options => options.Ignore());
         CreateMap<ProductBackupSettingsModel, ProductBackupSettings>();
     }

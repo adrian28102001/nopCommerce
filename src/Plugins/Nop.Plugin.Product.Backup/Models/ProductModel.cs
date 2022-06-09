@@ -12,7 +12,6 @@ public class ProductModel
     public int StockQuantity { get; set; }
     public decimal OldPrice { get; set; }
     public decimal Price { get; set; }
-    public bool Exported { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime UpdatedOnUtc { get; set; }
 }

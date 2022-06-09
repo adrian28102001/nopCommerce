@@ -16,7 +16,6 @@ public class ProductBackupFactory : IProductBackupFactory
     private readonly IStoreContext _storeContext;
     private readonly ISettingService _settingService;
     private readonly IProductService _productService;
-    private readonly IRepository<Core.Domain.Catalog.Product> _productRepository;
 
     public ProductBackupFactory(IStoreContext storeContext, ISettingService settingService,
         ProductBackupSettings productBackupSettings, IProductService productService,
@@ -26,7 +25,6 @@ public class ProductBackupFactory : IProductBackupFactory
         _settingService = settingService;
         _productBackupSettings = productBackupSettings;
         _productService = productService;
-        _productRepository = productRepository;
     }
 
     public async Task<ProductBackupSettingsModel> PrepareProductBackupSettingsModelAsync(
@@ -49,6 +47,8 @@ public class ProductBackupFactory : IProductBackupFactory
             await _settingService.SettingExistsAsync(productBackupSettings, x => x.BackupConfigurationEnabled, storeId);
         model.ProcessingProductsNumber_OverrideForStore =
             await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProcessingProductsNumber, storeId);
+        model.ProductBackupTimer_OverrideForStore =
+            await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProductBackupTimer, storeId);
         model.ProductBackupStoragePath_OverrideForStore =
             await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProductBackupStoragePath, storeId);
 
@@ -74,10 +74,10 @@ public class ProductBackupFactory : IProductBackupFactory
                     StockQuantity = model.StockQuantity,
                     OldPrice = model.OldPrice,
                     Price = model.Price,
-                    Exported = model.Exported,
                     CreatedOnUtc = model.CreatedOnUtc,
                     UpdatedOnUtc = model.UpdatedOnUtc,
                 };
+                // model.Exported = true;
                 modelList.Add(mappedModel);
 
 
