@@ -1,0 +1,40 @@
+﻿@model Nop.Plugin.Product.Backup.Models.ProductBackupSettingsModel
+
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="BackupConfigurationEnabled" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="BackupConfigurationEnabled" />
+            <span asp-validation-for="BackupConfigurationEnabled"></span>
+        </div>
+    
+    </div>
+</div>
+<div class="card-body">    
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProcessingProductsNumber_OverrideForStore" asp-input="ProcessingProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProcessingProductsNumber" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProcessingProductsNumber" />
+            <span asp-validation-for="ProcessingProductsNumber"></span>
+        </div>
+    </div>
+</div>
+
+<div class="card-body">    
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-override-store-checkbox asp-for="ProductBackupStoragePath_OverrideForStore" asp-input="ProductBackupStoragePath" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+            <nop-label asp-for="ProductBackupStoragePath" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="ProductBackupStoragePath" />
+            <span asp-validation-for="ProductBackupStoragePath"></span>
+        </div>
+    </div>
+</div>

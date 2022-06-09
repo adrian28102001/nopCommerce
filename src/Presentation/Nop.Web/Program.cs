@@ -18,6 +18,7 @@ builder.Configuration.AddEnvironmentVariables();
 //Add services to the application and configure service provider
 builder.Services.ConfigureApplicationServices(builder);
 
+
 var app = builder.Build();
 
 //Configure the application HTTP request pipeline

@@ -1,19 +1,54 @@
-﻿@model List<Nop.Plugin.Product.Backup.Models.ProductModel>
+﻿@using Nop.Web.Framework.Infrastructure
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Common
+@model Nop.Plugin.Product.Backup.Models.ProductBackupSettingsModel
 
 @{
     Layout = "_ConfigurePlugin";
 }
 
-@foreach (var model in Model)
-{
-    var modelName = model.Name;
-    <h5>Model: @modelName</h5>
-    var modelPrice = model.Price;
-    <h5>Price: @modelPrice</h5>
-    var modelExported = model.Exported;
-    <h5>Exported: @modelExported</h5>
-    var modelShortDescription = model.ShortDescription;
-    <h5>ShortDescription: @modelShortDescription</h5>
-    var modelSku = model.Sku;
-    <h5>Sku: @modelSku</h5>
+@{
+    const string hideCommonBlockAttributeName = "CustomerUserSettingsPage.HideCommonBlock";
+    var workContext = EngineContext.Current.Resolve<IWorkContext>();
+    var genericAttributeService = EngineContext.Current.Resolve<IGenericAttributeService>();
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var hideCommonBlock = await genericAttributeService.GetAttributeAsync<bool>(customer, hideCommonBlockAttributeName);
 }
+
+<form asp-controller="Backup" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Configuration.Settings.Product.Backup.Enabled")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserSettingsButtons, additionalData = Model })
+        </div>
+    </div>
+    
+    <div asp-validation-summary="All"></div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <nop-cards id="customersettings-cards">
+                    <nop-card asp-name="customersettings-common" asp-icon="fas fa-info" asp-title="@T("Admin.Configuration.Settings.CustomerUser.BlockTitle.Common")" asp-hide-block-attribute-name="@hideCommonBlockAttributeName" asp-hide="@hideCommonBlock" asp-advanced="false">@await Html.PartialAsync("_ProductBackup.Common.cshtml", Model)</nop-card>
+                    @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.CustomerUserDetailsBlock, additionalData = Model })
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+   
+    <script>
+        function toggleForceMultifactorAuthentication() {
+            warningValidation('@Url.Action("", "Backup")',
+                '@Html.NameFor(model => model.BackupConfigurationEnabled)',
+                {
+                    forceMultifactorAuthentication: $('#@Html.IdFor(model => model.BackupConfigurationEnabled)').is(':checked')
+                });
+        }
+    </script>
+</form>

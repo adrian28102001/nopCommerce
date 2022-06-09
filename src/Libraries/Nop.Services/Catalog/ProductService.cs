@@ -543,16 +543,6 @@ namespace Nop.Services.Catalog
 
         #region Products
 
-        public async Task<List<Product>> GetFiveUnexportedProductsAsync()
-        {
-            var query = (from p in _productRepository.Table
-                where p.Exported.Equals(false)
-                orderby p.Id
-                select p).Take(5);
-            var products = await query.ToListAsync();
-            return products;
-        }
-
         /// <summary>
         /// Delete a product
         /// </summary>
