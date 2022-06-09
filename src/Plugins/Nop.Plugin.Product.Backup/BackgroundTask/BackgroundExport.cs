@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Nop.Plugin.Product.Backup.Factory;
 using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Product.Backup.BackgroundTask;
@@ -12,20 +13,22 @@ public class BackgroundExport : IHostedService ,IDisposable
     private int _executionCount = 0;
     private readonly ILogger<BackgroundExport> _logger;
     private Timer _timer;
+    private readonly IProductBackupFactory _productBackupFactory;
 
-    public BackgroundExport(ILogger<BackgroundExport> logger)
+    public BackgroundExport(ILogger<BackgroundExport> logger, IProductBackupFactory productBackupFactory)
     {
         _logger = logger;
+        _productBackupFactory = productBackupFactory;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _timer = new Timer(o => {
-                _logger.LogInformation($"Printing the worker number");
+                _productBackupFactory.PrepareProductBackupModel();
             },
             null,
             TimeSpan.Zero,
-            TimeSpan.FromSeconds(5));
+            TimeSpan.FromSeconds(10));
  
         return Task.CompletedTask;    
     }

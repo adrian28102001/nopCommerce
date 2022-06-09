@@ -17,8 +17,6 @@ public class ProductService : IProductService
         _productRepository = productRepository;
         _productBackupSettings = productBackupSettings;
     }
-
-
     public async Task<List<Core.Domain.Catalog.Product>> GetFiveUnexportedProductsAsync()
     {
         var query = (from p in _productRepository.Table

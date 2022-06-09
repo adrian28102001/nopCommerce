@@ -15,11 +15,11 @@ public class ProductBackupFactory : IProductBackupFactory
     private readonly ProductBackupSettings _productBackupSettings;
     private readonly IStoreContext _storeContext;
     private readonly ISettingService _settingService;
-    private readonly Nop.Services.Catalog.IProductService _productService;
+    private readonly IProductService _productService;
     private readonly IRepository<Core.Domain.Catalog.Product> _productRepository;
 
     public ProductBackupFactory(IStoreContext storeContext, ISettingService settingService,
-        ProductBackupSettings productBackupSettings, Nop.Services.Catalog.IProductService productService,
+        ProductBackupSettings productBackupSettings, IProductService productService,
         IRepository<Core.Domain.Catalog.Product> productRepository)
     {
         _storeContext = storeContext;
@@ -60,7 +60,7 @@ public class ProductBackupFactory : IProductBackupFactory
         if (_productBackupSettings.BackupConfigurationEnabled)
         {
             var modelList = new List<ProductModel>();
-            var models = await _productService.GetFiveUnexportedProductsAsync(_productRepository, _productBackupSettings);
+            var models = await _productService.GetFiveUnexportedProductsAsync();
 
             foreach (var model in models)
             {

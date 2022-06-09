@@ -54,7 +54,6 @@ public class BackupController : BasePluginController
         var model = await _productBackupFactory.PrepareProductBackupSettingsModelAsync();
         
         //check if return value is null
-        var productBackupList = await _productBackupFactory.PrepareProductBackupModel();
         
         return View("~/Plugins/Product.Backup/Views/Configure.cshtml", model);
     }

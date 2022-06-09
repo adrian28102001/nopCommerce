@@ -11,5 +11,4 @@ public interface IProductService
     /// <param name="product">Product</param>
     /// <returns>A task that represents the asynchronous operation</returns>
     public Task<List<Core.Domain.Catalog.Product>> GetFiveUnexportedProductsAsync();
-
 }
