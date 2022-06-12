@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Nop.Plugin.Product.Backup.Models;
 
@@ -14,4 +15,5 @@ public class ProductModel
     public decimal Price { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime UpdatedOnUtc { get; set; }
+    public IList<PictureModel> PictureModelList { get; set; }
 }

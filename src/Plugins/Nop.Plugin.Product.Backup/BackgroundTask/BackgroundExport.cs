@@ -27,12 +27,12 @@ public class BackgroundExport : IHostedService ,IDisposable
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new Timer(o => {
-                _productBackupFactory.PrepareProductBackupModel();
-            },
-            null,
-            TimeSpan.Zero,
-            TimeSpan.FromSeconds(_productBackupSettings.ProductBackupTimer));
+        // _timer = new Timer(o => {
+        //         _productBackupFactory.PrepareProductBackupModel();
+        //     },
+        //     null,
+        //     TimeSpan.Zero,
+        //     TimeSpan.FromSeconds(300));
  
         return Task.CompletedTask;    
     }

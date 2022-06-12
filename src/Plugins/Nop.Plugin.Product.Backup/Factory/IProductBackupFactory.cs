@@ -14,7 +14,9 @@ public interface IProductBackupFactory
     /// A task that represents the asynchronous operation
     /// The task result contains the webhook settings model
     /// </returns>
-    Task<IList<ProductModel>> PrepareProductBackupModel();
+    Task<List<ProductModel>> PrepareProductBackupModel();
+
+    Task<List<PictureModel>> PrepareImageModel();
 
     /// <summary>
     /// Prepare product backup settings model
