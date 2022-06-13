@@ -1,9 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Product.Backup.Models;
 using Nop.Plugin.Product.Backup.Services;
+using Nop.Plugin.Product.Backup.Services.Picture;
 using Nop.Services.Configuration;
 using Nop.Services.Media;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -17,17 +21,19 @@ public class ProductBackupFactory : IProductBackupFactory
     private readonly ISettingService _settingService;
     private readonly IProductService _productService;
     private readonly IPictureService _pictureService;
+    private readonly IBackupPictureService _backupPictureService;
 
     public ProductBackupFactory(ProductBackupSettings productBackupSettings, IStoreContext storeContext,
-        ISettingService settingService, IProductService productService, IPictureService pictureService)
+        ISettingService settingService, IProductService productService, IPictureService pictureService,
+        IBackupPictureService backupPictureService)
     {
         _productBackupSettings = productBackupSettings;
         _storeContext = storeContext;
         _settingService = settingService;
         _productService = productService;
         _pictureService = pictureService;
+        _backupPictureService = backupPictureService;
     }
-
 
     public async Task<ProductBackupSettingsModel> PrepareProductBackupSettingsModelAsync(
         ProductBackupSettingsModel model = null)
@@ -43,7 +49,7 @@ public class ProductBackupFactory : IProductBackupFactory
         model.ActiveStoreScopeConfiguration = storeId;
 
         if (storeId <= 0)
-            return model;   
+            return model;
 
         model.BackupConfigurationEnabled_OverrideForStore =
             await _settingService.SettingExistsAsync(productBackupSettings, x => x.BackupConfigurationEnabled, storeId);
@@ -59,64 +65,55 @@ public class ProductBackupFactory : IProductBackupFactory
 
     public async Task<List<ProductModel>> PrepareProductBackupModel()
     {
-        if (_productBackupSettings.BackupConfigurationEnabled)
+        if (!_productBackupSettings.BackupConfigurationEnabled) return null;
+
+        var models = await _productService.GetFiveUnexportedProductsAsync();
+        var pictureModelList = await PrepareImageModel();
+        var productModelList = new List<ProductModel>();
+
+        foreach (var model in models)
         {
-            var modelList = new List<ProductModel>();
-            var models = await _productService.GetFiveUnexportedProductsAsync();
-
-            var pictureModelList = await PrepareImageModel();
-            foreach (var model in models)
+            var mappedModel = new ProductModel
             {
-                var mappedModel = new ProductModel
-                {
-                    ProductTypeId = model.ProductTypeId,
-                    Name = model.Name,
-                    ShortDescription = model.ShortDescription,
-                    FullDescription = model.ShortDescription,
-                    Sku = model.Sku,
-                    StockQuantity = model.StockQuantity,
-                    OldPrice = model.OldPrice,
-                    Price = model.Price,
-                    CreatedOnUtc = model.CreatedOnUtc,
-                    UpdatedOnUtc = model.UpdatedOnUtc,
-                    PictureModelList = pictureModelList
-                };
-                // model.Exported = true;
-                modelList.Add(mappedModel);
-
-                await System.IO.File.WriteAllTextAsync(
-                    $"{_productBackupSettings.ProductBackupStoragePath}/" + model.Id + ".json",
-                    JsonConvert.SerializeObject(mappedModel));
-                await using var file =
-                    System.IO.File.CreateText($"{_productBackupSettings.ProductBackupStoragePath}/" + model.Id +
-                                              ".json");
-                var serializer = new JsonSerializer();
-                serializer.Serialize(file, mappedModel);
-            }
-
-            return modelList;
+                Id = model.Id,
+                ProductTypeId = model.ProductTypeId,
+                Name = model.Name,
+                ShortDescription = model.ShortDescription,
+                FullDescription = model.ShortDescription,
+                Sku = model.Sku,
+                StockQuantity = model.StockQuantity,
+                OldPrice = model.OldPrice,
+                Price = model.Price,
+                CreatedOnUtc = model.CreatedOnUtc,
+                UpdatedOnUtc = model.UpdatedOnUtc,
+                PictureModelList = pictureModelList
+            };
+            productModelList.Add(mappedModel);
+            // model.Exported = true;
         }
 
-        return null;
+        return productModelList;
     }
 
     public async Task<List<PictureModel>> PrepareImageModel()
     {
-        var pictureModelList = new List<PictureModel>();
         var pictureUrlsList = new List<string>();
+        var pictureModelList = new List<PictureModel>();
 
-        var productModelsList = await _productService.GetFiveUnexportedProductsAsync();
+        var model = await _productService.GetFiveUnexportedProductsAsync();
 
-        foreach (var product in productModelsList)
+        foreach (var product in model)
         {
             var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
 
             foreach (var picture in pictures)
             {
-                var pictureUrl = await _pictureService.GetPictureUrlAsync(picture);
-                pictureUrlsList.Add(pictureUrl.Url);
+                var pictureUrl = await _backupPictureService.GetPictureUrl(picture);
+                pictureUrlsList.Add(pictureUrl);
+
                 var pictureModel = new PictureModel()
                 {
+                    Id = picture.Id,
                     AltAttribute = picture.AltAttribute,
                     IsNew = picture.IsNew,
                     MimeType = picture.MimeType,
@@ -130,5 +127,32 @@ public class ProductBackupFactory : IProductBackupFactory
         }
 
         return pictureModelList;
+    }
+
+    public async Task ExportModel()
+    {
+        var productModels = await PrepareProductBackupModel();
+        var root = _productBackupSettings.ProductBackupStoragePath;
+
+        foreach (var product in productModels)
+        {
+            foreach (var picture in product.PictureModelList)
+            {
+                var counter = 0;
+                foreach (var pictureUrl in picture.UrlsString)
+                {
+                    var destination = $"{root}/" + product.Id + "_" + picture.Id + "_" + $"{counter}" + ".jpg";
+                    counter++;
+                    if(!string.IsNullOrEmpty(destination))
+                        File.Copy(pictureUrl, destination);
+                }
+            }
+
+            await File.WriteAllTextAsync($"{root}/" + product.Id + ".json",
+                JsonConvert.SerializeObject(product));
+            await using var file = File.CreateText($"{root}/" + product.Id + ".json");
+            var serializer = new JsonSerializer();
+            serializer.Serialize(file, product);
+        }
     }
 }
