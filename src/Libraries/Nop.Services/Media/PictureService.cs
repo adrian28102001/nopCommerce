@@ -605,7 +605,6 @@ namespace Nop.Services.Media
                     : $"{picture.Id:0000000}.{lastPart}";
 
                 var thumbFilePath = await GetThumbLocalPathAsync(thumbFileName);
-                //here 
                 if (await GeneratedThumbExistsAsync(thumbFilePath, thumbFileName))
                     return (await GetThumbUrlAsync(thumbFileName, storeLocation), picture);
 
