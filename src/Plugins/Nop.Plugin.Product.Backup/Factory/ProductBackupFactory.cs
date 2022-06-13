@@ -12,17 +12,19 @@ public class ProductBackupFactory : IProductBackupFactory
 {
     private readonly ProductBackupSettings _productBackupSettings;
     private readonly IProductService _productService;
+    private readonly Nop.Services.Catalog.IProductService _service;
     private readonly IPictureService _pictureService;
     private readonly IBackupPictureService _backupPictureService;
 
     public ProductBackupFactory(ProductBackupSettings productBackupSettings, IProductService productService,
         IPictureService pictureService,
-        IBackupPictureService backupPictureService)
+        IBackupPictureService backupPictureService, Nop.Services.Catalog.IProductService service)
     {
         _productBackupSettings = productBackupSettings;
         _productService = productService;
         _pictureService = pictureService;
         _backupPictureService = backupPictureService;
+        _service = service;
     }
 
     public async Task<List<ProductModel>> PrepareProductBackupModel()
@@ -51,10 +53,11 @@ public class ProductBackupFactory : IProductBackupFactory
                 UpdatedOnUtc = model.UpdatedOnUtc,
                 PictureModelList = pictureModelList
             };
-            // model.Exported = true;
+            model.Exported = false;
+
+            await _service.UpdateProductAsync(model);
             productModelList.Add(mappedModel);
         }
-
         return productModelList;
     }
 

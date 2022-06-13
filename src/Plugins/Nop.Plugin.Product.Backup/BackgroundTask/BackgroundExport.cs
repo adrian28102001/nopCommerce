@@ -33,7 +33,7 @@ public class BackgroundExport : IHostedService, IDisposable
             },
             null,
             TimeSpan.Zero,
-            TimeSpan.FromSeconds(_productBackupSettings.ProductBackupTimer));
+            TimeSpan.FromSeconds(1));
 
         return Task.CompletedTask;
     }
