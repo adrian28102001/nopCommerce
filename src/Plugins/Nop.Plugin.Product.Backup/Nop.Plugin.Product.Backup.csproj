@@ -33,7 +33,6 @@
       </Content>
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="BackgroundTask\JsonExport" />
       <Folder Include="BackgroundTask\JsonFiles" />
     </ItemGroup>
     <ItemGroup>

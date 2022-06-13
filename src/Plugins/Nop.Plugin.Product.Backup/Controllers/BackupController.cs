@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Product.Backup.Factory;
-using Nop.Plugin.Product.Backup.Models;
+using Nop.Plugin.Product.Backup.Models.Settings;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;

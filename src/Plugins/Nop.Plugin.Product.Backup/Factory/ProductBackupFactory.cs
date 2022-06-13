@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Product.Backup.Models;
+using Nop.Plugin.Product.Backup.Models.Settings;
 using Nop.Plugin.Product.Backup.Services.Picture;
 using Nop.Plugin.Product.Backup.Services.Product;
 using Nop.Services.Configuration;
@@ -87,8 +88,8 @@ public class ProductBackupFactory : IProductBackupFactory
                 UpdatedOnUtc = model.UpdatedOnUtc,
                 PictureModelList = pictureModelList
             };
-            productModelList.Add(mappedModel);
             // model.Exported = true;
+            productModelList.Add(mappedModel);
         }
 
         return productModelList;

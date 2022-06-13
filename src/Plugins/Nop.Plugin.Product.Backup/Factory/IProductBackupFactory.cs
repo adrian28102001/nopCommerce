@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nop.Plugin.Product.Backup.Models;
+using Nop.Plugin.Product.Backup.Models.Settings;
 
 namespace Nop.Plugin.Product.Backup.Factory;
 

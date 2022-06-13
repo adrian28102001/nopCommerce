@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Nop.Core.Infrastructure.Mapper;
-using Nop.Plugin.Product.Backup.Models;
+using Nop.Plugin.Product.Backup.Models.Settings;
 
 namespace Nop.Plugin.Product.Backup.Mapper;
 

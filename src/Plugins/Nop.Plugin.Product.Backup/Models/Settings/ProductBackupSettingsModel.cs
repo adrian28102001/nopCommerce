@@ -1,7 +1,7 @@
 ﻿using Nop.Web.Framework.Models;
 using Nop.Web.Framework.Mvc.ModelBinding;
 
-namespace Nop.Plugin.Product.Backup.Models;
+namespace Nop.Plugin.Product.Backup.Models.Settings;
 
 public record ProductBackupSettingsModel : BaseNopModel, ISettingsModel
 {

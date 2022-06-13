@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nop.Plugin.Product.Backup.Factory;
-using Nop.Plugin.Product.Backup.Models;
+using Nop.Plugin.Product.Backup.Models.Settings;
 
 namespace Nop.Plugin.Product.Backup.BackgroundTask;
 
@@ -32,7 +32,7 @@ public class BackgroundExport : IHostedService ,IDisposable
             },
             null,
             TimeSpan.Zero,
-            TimeSpan.FromSeconds(300));
+            TimeSpan.FromSeconds(_productBackupSettings.ProductBackupTimer));
  
         return Task.CompletedTask;    
     }

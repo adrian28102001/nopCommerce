@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nop.Data;
 using Nop.Data.Extensions;
-using Nop.Plugin.Product.Backup.Models;
+using Nop.Plugin.Product.Backup.Models.Settings;
 
 namespace Nop.Plugin.Product.Backup.Services.Product;
 

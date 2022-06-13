@@ -1,6 +1,6 @@
 ﻿using Nop.Core.Configuration;
 
-namespace Nop.Plugin.Product.Backup.Models;
+namespace Nop.Plugin.Product.Backup.Models.Settings;
 
 public class ProductBackupSettings : ISettings
 {
