@@ -93,4 +93,3 @@ public class BackupController : BasePluginController
     }
 }
 
-//http://localhost:5000/Admin/Backup/Configure

@@ -5,7 +5,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Nop.Plugin.Product.Backup.Factory;
 using Nop.Plugin.Product.Backup.Models;
-using Nop.Services.Catalog;
 
 namespace Nop.Plugin.Product.Backup.BackgroundTask;
 

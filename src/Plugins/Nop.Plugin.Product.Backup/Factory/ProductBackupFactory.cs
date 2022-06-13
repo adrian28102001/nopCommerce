@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Core;
 using Nop.Plugin.Product.Backup.Models;
-using Nop.Plugin.Product.Backup.Services;
 using Nop.Plugin.Product.Backup.Services.Picture;
+using Nop.Plugin.Product.Backup.Services.Product;
 using Nop.Services.Configuration;
 using Nop.Services.Media;
 using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
@@ -67,7 +65,7 @@ public class ProductBackupFactory : IProductBackupFactory
     {
         if (!_productBackupSettings.BackupConfigurationEnabled) return null;
 
-        var models = await _productService.GetFiveUnexportedProductsAsync();
+        var models = await _productService.GetNotExportedProducts();
         var productModelList = new List<ProductModel>();
 
         foreach (var model in models)
@@ -115,7 +113,7 @@ public class ProductBackupFactory : IProductBackupFactory
                 SeoFilename = picture.SeoFilename,
                 TitleAttribute = picture.TitleAttribute,
                 VirtualPath = picture.VirtualPath,
-                UrlsString = pictureUrl
+                UrlString = pictureUrl
             };
             pictureModelList.Add(pictureModel);
         }
@@ -123,25 +121,23 @@ public class ProductBackupFactory : IProductBackupFactory
         return pictureModelList;
     }
 
-
     public async Task ExportModel()
     {
         var productModels = await PrepareProductBackupModel();
-        var root = _productBackupSettings.ProductBackupStoragePath;
+        var rootUrl = _productBackupSettings.ProductBackupStoragePath;
 
         foreach (var product in productModels)
         {
             foreach (var picture in product.PictureModelList)
             {
-              
-                var destination = $"{root}/" + product.Id + "_" + picture.Id + "_"  + ".jpg";
+                var destination = $"{rootUrl}/" + product.Id + "_" + picture.Id + ".jpg";
                 if (!string.IsNullOrEmpty(destination))
-                    File.Copy(picture.UrlsString, destination);
+                    File.Copy(picture.UrlString, destination);
             }
 
-            await File.WriteAllTextAsync($"{root}/" + product.Id + ".json",
+            await File.WriteAllTextAsync($"{rootUrl}/" + product.Id + ".json",
                 JsonConvert.SerializeObject(product));
-            await using var file = File.CreateText($"{root}/" + product.Id + ".json");
+            await using var file = File.CreateText($"{rootUrl}/" + product.Id + ".json");
             var serializer = new JsonSerializer();
             serializer.Serialize(file, product);
         }

@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Nop.Plugin.Product.Backup.Models;
 
 namespace Nop.Plugin.Product.Backup.Services.Picture;
 

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Nop.Plugin.Product.Backup.Models;
+﻿namespace Nop.Plugin.Product.Backup.Models;
 
 public class PictureModel
 {
@@ -11,5 +9,5 @@ public class PictureModel
     public string TitleAttribute { get; set; }
     public bool IsNew { get; set; }
     public string VirtualPath { get; set; }
-    public string UrlsString { get; set; }
+    public string UrlString { get; set; }
 }

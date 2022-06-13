@@ -5,7 +5,6 @@ using Nop.Core.Domain.Catalog;
 using Nop.Core.Domain.Media;
 using Nop.Core.Infrastructure;
 using Nop.Data;
-using Nop.Plugin.Product.Backup.Models;
 using Nop.Services.Catalog;
 using Nop.Services.Configuration;
 using Nop.Services.Logging;
@@ -29,11 +28,11 @@ public class BackupPictureService : PictureService, IBackupPictureService
     public async Task<string> GetPictureUrl(Core.Domain.Media.Picture picture)
     {
         var lastPart = await GetFileExtensionFromMimeTypeAsync(picture.MimeType);
-        
+
         var thumbFileName = !string.IsNullOrEmpty(picture.SeoFilename)
             ? $"{picture.Id:0000000}_{picture.SeoFilename}.{lastPart}"
             : $"{picture.Id:0000000}.{lastPart}";
-        
+
         var path = await GetThumbLocalPathAsync(thumbFileName);
         return path;
     }
