@@ -16,32 +16,33 @@ public class ProductBackupConfigSettings : IProductBackupConfigSettings
         _storeContext = storeContext;
         _settingService = settingService;
     }
-    
+
     public async Task<ProductBackupSettingsModel> PrepareProductBackupSettingsModel(
-            ProductBackupSettingsModel model = null)
-        {
-            //load settings for a chosen store scope
-            var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
-            var productBackupSettings = await _settingService.LoadSettingAsync<Models.Settings.ProductBackupSettings>(storeId);
+        ProductBackupSettingsModel model = null)
+    {
+        //load settings for a chosen store scope
+        var storeId = await _storeContext.GetActiveStoreScopeConfigurationAsync();
+        var productBackupSettings =
+            await _settingService.LoadSettingAsync<Models.Settings.ProductBackupSettings>(storeId);
 
-            //fill in model values from the entity
-            model ??= productBackupSettings.ToSettingsModel<ProductBackupSettingsModel>();
+        //fill in model values from the entity
+        model ??= productBackupSettings.ToSettingsModel<ProductBackupSettingsModel>();
 
-            //fill in additional values (not existing in the entity)
-            model.ActiveStoreScopeConfiguration = storeId;
+        //fill in additional values (not existing in the entity)
+        model.ActiveStoreScopeConfiguration = storeId;
 
-            if (storeId <= 0)
-                return model;
-
-            model.BackupConfigurationEnabled_OverrideForStore =
-                await _settingService.SettingExistsAsync(productBackupSettings, x => x.BackupConfigurationEnabled, storeId);
-            model.ProcessingProductsNumber_OverrideForStore =
-                await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProcessingProductsNumber, storeId);
-            model.ProductBackupTimer_OverrideForStore =
-                await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProductBackupTimer, storeId);
-            model.ProductBackupStoragePath_OverrideForStore =
-                await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProductBackupStoragePath, storeId);
-
+        if (storeId <= 0)
             return model;
-        }
+
+        model.BackupConfigurationEnabled_OverrideForStore =
+            await _settingService.SettingExistsAsync(productBackupSettings, x => x.BackupConfigurationEnabled, storeId);
+        model.ProcessingProductsNumber_OverrideForStore =
+            await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProcessingProductsNumber, storeId);
+        model.ProductBackupTimer_OverrideForStore =
+            await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProductBackupTimer, storeId);
+        model.ProductBackupStoragePath_OverrideForStore =
+            await _settingService.SettingExistsAsync(productBackupSettings, x => x.ProductBackupStoragePath, storeId);
+
+        return model;
+    }
 }

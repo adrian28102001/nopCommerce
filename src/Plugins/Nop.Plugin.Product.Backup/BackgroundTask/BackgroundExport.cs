@@ -8,7 +8,7 @@ using Nop.Plugin.Product.Backup.Services.Export;
 
 namespace Nop.Plugin.Product.Backup.BackgroundTask;
 
-public class BackgroundExport : IHostedService ,IDisposable
+public class BackgroundExport : IHostedService, IDisposable
 {
     private int _executionCount = 0;
     private Timer _timer;
@@ -17,7 +17,8 @@ public class BackgroundExport : IHostedService ,IDisposable
     private readonly ILogger<BackgroundExport> _logger;
     private readonly IExportService _exportService;
 
-    public BackgroundExport(ILogger<BackgroundExport> logger, ProductBackupSettings productBackupSettings, IExportService exportService)
+    public BackgroundExport(ILogger<BackgroundExport> logger, ProductBackupSettings productBackupSettings,
+        IExportService exportService)
     {
         _logger = logger;
         _productBackupSettings = productBackupSettings;
@@ -33,8 +34,8 @@ public class BackgroundExport : IHostedService ,IDisposable
             null,
             TimeSpan.Zero,
             TimeSpan.FromSeconds(_productBackupSettings.ProductBackupTimer));
- 
-        return Task.CompletedTask;    
+
+        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -43,7 +44,8 @@ public class BackgroundExport : IHostedService ,IDisposable
 
         _timer?.Change(Timeout.Infinite, 0);
 
-        return Task.CompletedTask;    }
+        return Task.CompletedTask;
+    }
 
     public void Dispose()
     {

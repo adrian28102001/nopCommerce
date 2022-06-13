@@ -12,11 +12,13 @@ public class ProductService : IProductService
     private readonly IRepository<Core.Domain.Catalog.Product> _productRepository;
     private readonly ProductBackupSettings _productBackupSettings;
 
-    public ProductService(IRepository<Core.Domain.Catalog.Product> productRepository, ProductBackupSettings productBackupSettings)
+    public ProductService(IRepository<Core.Domain.Catalog.Product> productRepository,
+        ProductBackupSettings productBackupSettings)
     {
         _productRepository = productRepository;
         _productBackupSettings = productBackupSettings;
     }
+
     public async Task<List<Core.Domain.Catalog.Product>> GetNextProductsToExport()
     {
         var query = (

@@ -9,6 +9,4 @@ public interface IProductBackupFactory
     Task<List<ProductModel>> PrepareProductBackupModel();
 
     Task<List<PictureModel>> PrepareImageModel(int imageId);
-    
-    
 }
