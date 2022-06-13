@@ -5,5 +5,5 @@ namespace Nop.Plugin.Product.Backup.Services.Product;
 
 public interface IProductService
 {
-    public Task<List<Core.Domain.Catalog.Product>> GetNotExportedProducts();
+    public Task<List<Core.Domain.Catalog.Product>> GetNextProductsToExport();
 }

@@ -17,9 +17,10 @@ public class ProductService : IProductService
         _productRepository = productRepository;
         _productBackupSettings = productBackupSettings;
     }
-    public async Task<List<Core.Domain.Catalog.Product>> GetNotExportedProducts()
+    public async Task<List<Core.Domain.Catalog.Product>> GetNextProductsToExport()
     {
-        var query = (from p in _productRepository.Table
+        var query = (
+            from p in _productRepository.Table
             where p.Exported.Equals(false)
             orderby p.Id
             select p).Take(_productBackupSettings.ProcessingProductsNumber);

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
-using Nop.Plugin.Product.Backup.Factory;
+using Nop.Plugin.Product.Backup.Factory.Settings;
 using Nop.Plugin.Product.Backup.Models.Settings;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
@@ -12,6 +12,7 @@ using Nop.Web.Areas.Admin.Infrastructure.Mapper.Extensions;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Controllers;
 using Nop.Web.Framework.Mvc.Filters;
+using ProductBackupSettings = Nop.Plugin.Product.Backup.Models.Settings.ProductBackupSettings;
 
 namespace Nop.Plugin.Product.Backup.Controllers;
 
@@ -22,25 +23,25 @@ namespace Nop.Plugin.Product.Backup.Controllers;
 public class BackupController : BasePluginController
 {
     private readonly IPermissionService _permissionService;
-    private readonly IProductBackupFactory _productBackupFactory;
+    private readonly IProductBackupConfigSettings _productBackupConfigFactory;
     private readonly IStoreContext _storeContext;
     private readonly ISettingService _settingService;
     private readonly ICustomerActivityService _customerActivityService;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
 
-    public BackupController(IPermissionService permissionService,
-        IProductBackupFactory productBackupFactory, IStoreContext storeContext, ISettingService settingService,
+    public BackupController(IPermissionService permissionService, IStoreContext storeContext,
+        ISettingService settingService,
         ICustomerActivityService customerActivityService, ILocalizationService localizationService,
-        INotificationService notificationService)
+        INotificationService notificationService, IProductBackupConfigSettings productBackupConfigFactory)
     {
         _permissionService = permissionService;
-        _productBackupFactory = productBackupFactory;
         _storeContext = storeContext;
         _settingService = settingService;
         _customerActivityService = customerActivityService;
         _localizationService = localizationService;
         _notificationService = notificationService;
+        _productBackupConfigFactory = productBackupConfigFactory;
     }
 
     [AuthorizeAdmin]
@@ -50,8 +51,8 @@ public class BackupController : BasePluginController
         if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageSettings))
             return AccessDeniedView();
 
-        var model = await _productBackupFactory.PrepareProductBackupSettingsModelAsync();
-        
+        var model = await _productBackupConfigFactory.PrepareProductBackupSettingsModel();
+
         return View("~/Plugins/Product.Backup/Views/Configure.cshtml", model);
     }
 
@@ -69,13 +70,16 @@ public class BackupController : BasePluginController
         productBackupSettings = model.ToSettings(productBackupSettings);
 
         //and loaded from database after each update
-        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.BackupConfigurationEnabled,
+        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings,
+            x => x.BackupConfigurationEnabled,
             model.BackupConfigurationEnabled_OverrideForStore, storeScope, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.ProcessingProductsNumber,
+        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings,
+            x => x.ProcessingProductsNumber,
             model.ProcessingProductsNumber_OverrideForStore, storeScope, false);
         await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.ProductBackupTimer,
             model.ProductBackupTimer_OverrideForStore, storeScope, false);
-        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings, x => x.ProductBackupStoragePath,
+        await _settingService.SaveSettingOverridablePerStoreAsync(productBackupSettings,
+            x => x.ProductBackupStoragePath,
             model.ProductBackupStoragePath_OverrideForStore, storeScope, false);
 
         //now clear settings cache
@@ -92,4 +96,3 @@ public class BackupController : BasePluginController
         return await Configure();
     }
 }
-

@@ -3,8 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Nop.Plugin.Product.Backup.Factory;
 using Nop.Plugin.Product.Backup.Models.Settings;
+using Nop.Plugin.Product.Backup.Services.Export;
 
 namespace Nop.Plugin.Product.Backup.BackgroundTask;
 
@@ -15,20 +15,20 @@ public class BackgroundExport : IHostedService ,IDisposable
 
     private readonly ProductBackupSettings _productBackupSettings;
     private readonly ILogger<BackgroundExport> _logger;
-    private readonly IProductBackupFactory _productBackupFactory;
+    private readonly IExportService _exportService;
 
-    public BackgroundExport(ILogger<BackgroundExport> logger, IProductBackupFactory productBackupFactory, ProductBackupSettings productBackupSettings)
+    public BackgroundExport(ILogger<BackgroundExport> logger, ProductBackupSettings productBackupSettings, IExportService exportService)
     {
         _logger = logger;
-        _productBackupFactory = productBackupFactory;
         _productBackupSettings = productBackupSettings;
+        _exportService = exportService;
     }
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
         _timer = new Timer(o =>
             {
-                _productBackupFactory.ExportModel();
+                _exportService.ExportModel();
             },
             null,
             TimeSpan.Zero,
@@ -36,14 +36,7 @@ public class BackgroundExport : IHostedService ,IDisposable
  
         return Task.CompletedTask;    
     }
-    private void DoWork(object? state)
-    {
-        var count = Interlocked.Increment(ref _executionCount);
 
-        _logger.LogInformation(
-            "Timed Hosted Service is working. Count: {Count}", count);
-    }
-    
     public Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation("Timed Hosted Service is stopping.");
