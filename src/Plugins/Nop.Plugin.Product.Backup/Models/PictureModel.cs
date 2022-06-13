@@ -11,5 +11,5 @@ public class PictureModel
     public string TitleAttribute { get; set; }
     public bool IsNew { get; set; }
     public string VirtualPath { get; set; }
-    public IList<string> UrlsString { get; set; }
+    public string UrlsString { get; set; }
 }

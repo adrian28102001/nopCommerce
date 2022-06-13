@@ -10,7 +10,7 @@ public interface IProductBackupFactory
 
     Task<List<ProductModel>> PrepareProductBackupModel();
 
-    Task<List<PictureModel>> PrepareImageModel();
+    Task<List<PictureModel>> PrepareImageModel(int id);
     
     Task<ProductBackupSettingsModel> PrepareProductBackupSettingsModelAsync(ProductBackupSettingsModel model = null);
 }

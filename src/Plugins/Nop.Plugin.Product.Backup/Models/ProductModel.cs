@@ -16,5 +16,5 @@ public class ProductModel
     public decimal Price { get; set; }
     public DateTime CreatedOnUtc { get; set; }
     public DateTime UpdatedOnUtc { get; set; }
-    public IList<PictureModel> PictureModelList { get; set; }
+    public List<PictureModel> PictureModelList { get; set; }
 }

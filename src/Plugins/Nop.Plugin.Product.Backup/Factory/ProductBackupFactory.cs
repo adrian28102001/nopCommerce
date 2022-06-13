@@ -68,11 +68,12 @@ public class ProductBackupFactory : IProductBackupFactory
         if (!_productBackupSettings.BackupConfigurationEnabled) return null;
 
         var models = await _productService.GetFiveUnexportedProductsAsync();
-        var pictureModelList = await PrepareImageModel();
         var productModelList = new List<ProductModel>();
 
         foreach (var model in models)
         {
+            var pictureModelList = await PrepareImageModel(model.Id);
+
             var mappedModel = new ProductModel
             {
                 Id = model.Id,
@@ -95,39 +96,33 @@ public class ProductBackupFactory : IProductBackupFactory
         return productModelList;
     }
 
-    public async Task<List<PictureModel>> PrepareImageModel()
+    public async Task<List<PictureModel>> PrepareImageModel(int id)
     {
-        var pictureUrlsList = new List<string>();
         var pictureModelList = new List<PictureModel>();
 
-        var model = await _productService.GetFiveUnexportedProductsAsync();
+        var pictures = await _pictureService.GetPicturesByProductIdAsync(id);
 
-        foreach (var product in model)
+        foreach (var picture in pictures)
         {
-            var pictures = await _pictureService.GetPicturesByProductIdAsync(product.Id);
+            var pictureUrl = await _backupPictureService.GetPictureUrl(picture);
 
-            foreach (var picture in pictures)
+            var pictureModel = new PictureModel()
             {
-                var pictureUrl = await _backupPictureService.GetPictureUrl(picture);
-                pictureUrlsList.Add(pictureUrl);
-
-                var pictureModel = new PictureModel()
-                {
-                    Id = picture.Id,
-                    AltAttribute = picture.AltAttribute,
-                    IsNew = picture.IsNew,
-                    MimeType = picture.MimeType,
-                    SeoFilename = picture.SeoFilename,
-                    TitleAttribute = picture.TitleAttribute,
-                    VirtualPath = picture.VirtualPath,
-                    UrlsString = pictureUrlsList
-                };
-                pictureModelList.Add(pictureModel);
-            }
+                Id = picture.Id,
+                AltAttribute = picture.AltAttribute,
+                IsNew = picture.IsNew,
+                MimeType = picture.MimeType,
+                SeoFilename = picture.SeoFilename,
+                TitleAttribute = picture.TitleAttribute,
+                VirtualPath = picture.VirtualPath,
+                UrlsString = pictureUrl
+            };
+            pictureModelList.Add(pictureModel);
         }
 
         return pictureModelList;
     }
+
 
     public async Task ExportModel()
     {
@@ -138,14 +133,10 @@ public class ProductBackupFactory : IProductBackupFactory
         {
             foreach (var picture in product.PictureModelList)
             {
-                var counter = 0;
-                foreach (var pictureUrl in picture.UrlsString)
-                {
-                    var destination = $"{root}/" + product.Id + "_" + picture.Id + "_" + $"{counter}" + ".jpg";
-                    counter++;
-                    if(!string.IsNullOrEmpty(destination))
-                        File.Copy(pictureUrl, destination);
-                }
+              
+                var destination = $"{root}/" + product.Id + "_" + picture.Id + "_"  + ".jpg";
+                if (!string.IsNullOrEmpty(destination))
+                    File.Copy(picture.UrlsString, destination);
             }
 
             await File.WriteAllTextAsync($"{root}/" + product.Id + ".json",
