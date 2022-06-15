@@ -15,7 +15,7 @@ public class FileHelper : IFileHelper
         _productBackupConfigSettings = productBackupConfigSettings;
     }
 
-    public void DownloadFile(int productId, int pictureId, string source)
+    public void ExportFile(int productId, int pictureId, string source)
     {
         var rootUrl = _productBackupConfigSettings.ProductBackupStoragePath;
         var destination = $"{rootUrl}/" + productId + "_" + pictureId + ".jpg";
@@ -23,7 +23,7 @@ public class FileHelper : IFileHelper
             File.Copy(source, destination);
     }
 
-    public async Task SerializeToJson(ProductModel productModel)
+    public async Task WriteToFile(ProductModel productModel)
     {
         var rootUrl = _productBackupConfigSettings.ProductBackupStoragePath;
         await File.WriteAllTextAsync($"{rootUrl}/" + productModel.Id + ".json",

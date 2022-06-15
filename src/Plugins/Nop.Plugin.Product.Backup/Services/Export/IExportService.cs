@@ -4,5 +4,5 @@ namespace Nop.Plugin.Product.Backup.Services.Export;
 
 public interface IExportService
 {
-    Task ExportModel();
+    Task Export();
 }

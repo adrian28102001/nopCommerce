@@ -15,16 +15,16 @@ public class ExportService : IExportService
         _fileHelper = fileHelper;
     }
 
-    public async Task ExportModel()
+    public async Task Export()
     {
         var productModels = await _productBackupFactory.PrepareProductBackupModel();
 
         foreach (var product in productModels)
         {
             foreach (var picture in product.PictureModelList)
-                _fileHelper.DownloadFile(product.Id, picture.Id, picture.UrlString);
+                _fileHelper.ExportFile(product.Id, picture.Id, picture.UrlString);
 
-            await _fileHelper.SerializeToJson(product);
+            await _fileHelper.WriteToFile(product);
         }
     }
 }
