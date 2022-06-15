@@ -16,7 +16,7 @@ namespace Nop.Services.Catalog
     public partial interface IProductService
     {
         #region Products
-
+        
         /// <summary>
         /// Delete a product
         /// </summary>

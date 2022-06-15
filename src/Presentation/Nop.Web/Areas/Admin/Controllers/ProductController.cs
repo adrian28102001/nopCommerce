@@ -752,7 +752,6 @@ namespace Nop.Web.Areas.Admin.Controllers
 
             //prepare model
             var model = await _productModelFactory.PrepareProductSearchModelAsync(new ProductSearchModel());
-
             return View(model);
         }
 

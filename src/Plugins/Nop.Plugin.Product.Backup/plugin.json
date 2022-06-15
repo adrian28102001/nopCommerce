@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Product backup",
+  "FriendlyName": "Product backup",
+  "SystemName": "Product.Backup",
+  "Version": "1.46",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Adrian&George",
+  "DisplayOrder": 1,
+  "FileName": "Nop.Plugin.Product.Backup.dll",
+  "Description": "This plugin allows to get all products exported in a json file type"
+}

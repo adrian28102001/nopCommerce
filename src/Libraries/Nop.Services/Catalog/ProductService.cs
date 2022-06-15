@@ -505,7 +505,6 @@ namespace Nop.Services.Catalog
                 orderby csp.Id
                 select csp;
             var crossSellProducts = await query.ToListAsync();
-
             return crossSellProducts;
         }
 

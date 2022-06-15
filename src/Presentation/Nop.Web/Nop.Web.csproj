@@ -64,6 +64,13 @@
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\NewPage\Index.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\NewPage\NewPage.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Admin\Views\WebhookSetting\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\Views\Configure.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\Views\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\Views\_Webhook.Common.cshtml" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\Nop.Web.deps.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\Nop.Web.runtimeconfig.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\Nop.Web.staticwebassets.runtime.json" />
+    <_ContentIncludedByDefault Remove="Plugins\Product.Backup\plugin.json" />
   </ItemGroup>
 
   <ItemGroup>
