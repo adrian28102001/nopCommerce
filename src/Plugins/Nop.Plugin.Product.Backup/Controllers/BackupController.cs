@@ -1,8 +1,15 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
 using Nop.Plugin.Product.Backup.Factory.Settings;
 using Nop.Plugin.Product.Backup.Models.Settings;
+using Nop.Plugin.Product.Backup.Services.Import;
 using Nop.Services.Configuration;
 using Nop.Services.Localization;
 using Nop.Services.Logging;
@@ -29,11 +36,16 @@ public class BackupController : BasePluginController
     private readonly ICustomerActivityService _customerActivityService;
     private readonly ILocalizationService _localizationService;
     private readonly INotificationService _notificationService;
+    private readonly IWorkContext _workContext;
+    private readonly IImportManufacturesFromZip _importManufacturesFromZip;
+    private readonly IWebHostEnvironment _webHostEnvironment;
 
     public BackupController(IPermissionService permissionService, IStoreContext storeContext,
         ISettingService settingService,
         ICustomerActivityService customerActivityService, ILocalizationService localizationService,
-        INotificationService notificationService, IProductBackupConfigSettings productBackupConfigFactory)
+        INotificationService notificationService, IProductBackupConfigSettings productBackupConfigFactory,
+        IWorkContext workContext, IImportManufacturesFromZip importManufacturesFromZip,
+        IWebHostEnvironment webHostEnvironment)
     {
         _permissionService = permissionService;
         _storeContext = storeContext;
@@ -42,6 +54,9 @@ public class BackupController : BasePluginController
         _localizationService = localizationService;
         _notificationService = notificationService;
         _productBackupConfigFactory = productBackupConfigFactory;
+        _workContext = workContext;
+        _importManufacturesFromZip = importManufacturesFromZip;
+        _webHostEnvironment = webHostEnvironment;
     }
 
     [AuthorizeAdmin]
@@ -94,5 +109,42 @@ public class BackupController : BasePluginController
 
         //if we got this far, something failed, redisplay form
         return await Configure();
+    }
+
+    [HttpPost]
+    [IgnoreAntiforgeryToken]
+    public virtual async Task<IActionResult> ImportFromZip(IEnumerable<IFormFile> importZipFiles)
+    {
+        if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
+            return AccessDeniedView();
+
+        //a vendor cannot import categories
+        if (await _workContext.GetCurrentVendorAsync() != null)
+            return AccessDeniedView();
+
+        try
+        {
+            var importZipFile = importZipFiles.FirstOrDefault();
+            if (importZipFile.Length > 0)
+            {
+                await _importManufacturesFromZip.ImportProductsFromZip(importZipFile.OpenReadStream());
+            }
+            else
+            {
+                _notificationService.ErrorNotification(
+                    await _localizationService.GetResourceAsync("Admin.Common.UploadFile"));
+                return RedirectToAction("Configure");
+            }
+
+            _notificationService.SuccessNotification(
+                await _localizationService.GetResourceAsync("Admin.Catalog.Categories.Imported"));
+
+            return RedirectToAction("Configure");
+        }
+        catch (Exception exc)
+        {
+            await _notificationService.ErrorNotificationAsync(exc);
+            return RedirectToAction("Configure");
+        }
     }
 }

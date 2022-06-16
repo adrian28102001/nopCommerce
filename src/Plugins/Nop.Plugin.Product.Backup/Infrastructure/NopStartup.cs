@@ -7,6 +7,7 @@ using Nop.Plugin.Product.Backup.Factory;
 using Nop.Plugin.Product.Backup.Factory.Settings;
 using Nop.Plugin.Product.Backup.Services.Export;
 using Nop.Plugin.Product.Backup.Services.Helpers;
+using Nop.Plugin.Product.Backup.Services.Import;
 using Nop.Plugin.Product.Backup.Services.Picture;
 using Nop.Plugin.Product.Backup.Services.Product;
 using Nop.Services.Media;
@@ -21,6 +22,7 @@ public class NopStartup : INopStartup
         services.AddScoped<IPictureService, PictureService>();
         services.AddScoped<IExportService, ExportService>();
         services.AddScoped<IFileHelper, FileHelper>();
+        services.AddScoped<IImportManufacturesFromZip, ImportManufacturesFromZip>();
         services.AddScoped<IProductBackupFactory, ProductBackupFactory>();
         services.AddScoped<IProductBackupConfigSettings, ProductBackupConfigSettings>();
         services.AddScoped<IBackupPictureService, BackupPictureService>();

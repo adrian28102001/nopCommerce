@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DocumentFormat.OpenXml.Vml;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Nop.Core;
@@ -483,7 +484,7 @@ namespace Nop.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public virtual async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile)
+        public virtual async Task<IActionResult> ImportFromXlsx(IFormFile importzipfile)
         {
             if (!await _permissionService.AuthorizeAsync(StandardPermissionProvider.ManageCategories))
                 return AccessDeniedView();
@@ -491,12 +492,12 @@ namespace Nop.Web.Areas.Admin.Controllers
             //a vendor cannot import categories
             if (await _workContext.GetCurrentVendorAsync() != null)
                 return AccessDeniedView();
-
+            
             try
             {
-                if (importexcelfile != null && importexcelfile.Length > 0)
+                if (importzipfile != null && importzipfile.Length > 0)
                 {
-                    await _importManager.ImportCategoriesFromXlsxAsync(importexcelfile.OpenReadStream());
+                    await _importManager.ImportCategoriesFromXlsxAsync(importzipfile.OpenReadStream());
                 }
                 else
                 {

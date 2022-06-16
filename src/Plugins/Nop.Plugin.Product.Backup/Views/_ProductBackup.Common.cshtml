@@ -1,51 +1,126 @@
 ﻿@model Nop.Plugin.Product.Backup.Models.Settings.ProductBackupSettingsModel
 
-
 <div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
-            <nop-label asp-for="BackupConfigurationEnabled" />
+            <nop-label asp-for="BackupConfigurationEnabled"/>
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="BackupConfigurationEnabled" />
+            <nop-editor asp-for="BackupConfigurationEnabled"/>
             <span asp-validation-for="BackupConfigurationEnabled"></span>
         </div>
-    
+
     </div>
 </div>
-<div class="card-body">    
+<div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ProcessingProductsNumber_OverrideForStore" asp-input="ProcessingProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ProcessingProductsNumber" />
+            <nop-override-store-checkbox asp-for="ProcessingProductsNumber_OverrideForStore" asp-input="ProcessingProductsNumber" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="ProcessingProductsNumber"/>
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ProcessingProductsNumber" />
+            <nop-editor asp-for="ProcessingProductsNumber"/>
             <span asp-validation-for="ProcessingProductsNumber"></span>
         </div>
     </div>
 </div>
-<div class="card-body">    
+<div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ProductBackupTimer_OverrideForStore" asp-input="ProductBackupTimer" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ProductBackupTimer" />
+            <nop-override-store-checkbox asp-for="ProductBackupTimer_OverrideForStore" asp-input="ProductBackupTimer" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="ProductBackupTimer"/>
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ProductBackupTimer" />
+            <nop-editor asp-for="ProductBackupTimer"/>
             <span asp-validation-for="ProductBackupTimer"></span>
         </div>
     </div>
 </div>
-<div class="card-body">    
+<div class="card-body">
     <div class="form-group row">
         <div class="col-md-3">
-            <nop-override-store-checkbox asp-for="ProductBackupStoragePath_OverrideForStore" asp-input="ProductBackupStoragePath" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
-            <nop-label asp-for="ProductBackupStoragePath" />
+            <nop-override-store-checkbox asp-for="ProductBackupStoragePath_OverrideForStore" asp-input="ProductBackupStoragePath" asp-store-scope="@Model.ActiveStoreScopeConfiguration"/>
+            <nop-label asp-for="ProductBackupStoragePath"/>
         </div>
         <div class="col-md-9">
-            <nop-editor asp-for="ProductBackupStoragePath" />
+            <nop-editor asp-for="ProductBackupStoragePath"/>
             <span asp-validation-for="ProductBackupStoragePath"></span>
         </div>
     </div>
 </div>
+
+<button type="button" name="importzip" class="btn bg-olive" data-toggle="modal" data-target="#importZip-window">
+    <i class="fas fa-upload"></i>
+    @T("Admin.Common.Import")
+</button>
+
+<div id="importZip-window" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="importZip-window-title">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="importZip-window-title">@T("Admin.Common.ImportFromZip")</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="form-horizontal">
+                <div class="modal-body">
+                    <ul class="common-list">
+                        <li>
+                            <em>@T("Admin.Catalog.Categories.List.ImportFromZipTip")</em>
+                        </li>
+                        <li>
+                            <em>@T("Admin.Common.ImportFromZip.ManyRecordsWarning")</em>
+                        </li>
+                    </ul>
+                    <div class="form-group row">
+                        <div class="col-md-2">
+                            <div class="label-wrapper">
+                                <label class="col-form-label">
+                                    @T("Admin.Common.ZipFile")
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="file" id="importZipfile" name="importZipfile" class="form-control"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="ImportFromZip" class="btn btn-primary" type="button" onclick="uploadFile()">
+                        @T("Admin.Common.ImportFromZip")
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function uploadFile() {
+       const files = document.getElementById('importZipfile').files;// $('#file').files[0];// e.target.files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("importZipFiles" + x, files[x]);
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("ImportFromZip", "Backup"))",
+                    contentType: false,
+                    processData: false,
+                    data: data,
+                    success: function (result) {
+                        alert(result)
+                    },
+                    error: function (xhr, status, p3, p4) {
+                        alert('Something is going to wrong please try again!');
+                    }
+                });
+            } else {
+                alert("Upgrade your browser!");
+            }
+        }
+    }
+</script>

@@ -1,4 +1,6 @@
 ﻿using System.IO;
+using System.IO.Compression;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Nop.Plugin.Product.Backup.Models;
@@ -31,5 +33,27 @@ public class FileHelper : IFileHelper
         await using var file = File.CreateText($"{rootUrl}/" + productModel.Id + ".json");
         var serializer = new JsonSerializer();
         serializer.Serialize(file, productModel);
+    }
+
+    public Task Decompress(DirectoryInfo directoryPath)
+    {
+        //get all files
+        foreach (var file in directoryPath.GetFiles())
+        {
+            var path = directoryPath.FullName;
+            //get zip file, if exists
+            var zipPath = path + file.Name;
+
+            var extractPath = Regex.Replace(path + file.Name, ".zip", "");
+
+            //if path exists, delete it to generate new extracted files
+            if (Directory.Exists(extractPath))
+                Directory.Delete(extractPath, true);
+
+            //if zip exists extract it
+            if (File.Exists(zipPath))
+                ZipFile.ExtractToDirectory(zipPath, extractPath);
+        }
+        return Task.CompletedTask;
     }
 }
