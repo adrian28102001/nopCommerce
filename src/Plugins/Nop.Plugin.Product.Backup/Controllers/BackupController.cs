@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
@@ -110,7 +109,7 @@ public class BackupController : BasePluginController
         //if we got this far, something failed, redisplay form
         return await Configure();
     }
-
+    
     [HttpPost]
     [IgnoreAntiforgeryToken]
     public virtual async Task<IActionResult> ImportFromZip(IEnumerable<IFormFile> importZipFiles)
@@ -127,7 +126,7 @@ public class BackupController : BasePluginController
             var importZipFile = importZipFiles.FirstOrDefault();
             if (importZipFile != null && importZipFile.Length > 0)
             {
-                await _importManufacturesFromZip.ImportProductsFromZip(importZipFile.OpenReadStream());
+                await _importManufacturesFromZip.DecompressFile(importZipFile);
             }
             else
             {

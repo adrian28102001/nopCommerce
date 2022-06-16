@@ -1,9 +1,9 @@
-﻿using System.IO;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace Nop.Plugin.Product.Backup.Services.Import;
 
 public interface IImportManufacturesFromZip
 {
-    Task ImportProductsFromZip(Stream stream);
+    Task DecompressFile(IFormFile importZipFiles);
 }
