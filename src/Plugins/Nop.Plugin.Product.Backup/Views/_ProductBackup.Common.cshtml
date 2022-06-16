@@ -98,12 +98,13 @@
 
 <script>
     function uploadFile() {
-       const files = document.getElementById('importZipfile').files;// $('#file').files[0];// e.target.files;
+       var files = document.getElementById('importZipfile').files;// $('#file').files[0];// e.target.files;
         if (files.length > 0) {
             if (window.FormData !== undefined) {
                 var data = new FormData();
                 for (var x = 0; x < files.length; x++) {
-                    data.append("importZipFiles" + x, files[x]);
+                    data.append("importZipFiles", files[x]);
+                     //data.append(base64String, base64String);
                 }
                 $.ajax({
                     type: "POST",

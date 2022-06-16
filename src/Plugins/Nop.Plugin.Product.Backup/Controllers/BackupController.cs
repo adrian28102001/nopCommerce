@@ -125,7 +125,7 @@ public class BackupController : BasePluginController
         try
         {
             var importZipFile = importZipFiles.FirstOrDefault();
-            if (importZipFile.Length > 0)
+            if (importZipFile != null && importZipFile.Length > 0)
             {
                 await _importManufacturesFromZip.ImportProductsFromZip(importZipFile.OpenReadStream());
             }
