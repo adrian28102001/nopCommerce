@@ -23,7 +23,6 @@ public class ImportManufacturesFromZip : IImportManufacturesFromZip
     private readonly IPictureService _pictureService;
     private readonly IMapping _mapping;
 
-
     public ImportManufacturesFromZip(IFileHelper fileHelper, ProductBackupSettings productBackupSettings,
         IProductService productService, IPictureService pictureService, IMapping mapping)
     {
@@ -49,7 +48,7 @@ public class ImportManufacturesFromZip : IImportManufacturesFromZip
 
             using (Stream fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             {
-                importZipFiles.CopyTo(fileStream);
+                await importZipFiles.CopyToAsync(fileStream);
             }
 
             ZipFile.ExtractToDirectory(filePath, directory);
@@ -93,7 +92,7 @@ public class ImportManufacturesFromZip : IImportManufacturesFromZip
                     await _pictureService.GetPictureSeNameAsync(pictureId.SeoFilename),
                     pictureId.AltAttribute,
                     pictureId.TitleAttribute);
-                
+
                 var productPicture = new ProductPicture
                 {
                     PictureId = pictureCopy.Id,
