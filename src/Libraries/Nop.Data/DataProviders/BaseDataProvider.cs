@@ -468,7 +468,7 @@ namespace Nop.Data.DataProviders
         /// <summary>
         /// Database connection string
         /// </summary>
-        protected static string GetCurrentConnectionString()
+        public static string GetCurrentConnectionString()
         {
             return DataSettingsManager.LoadSettings().ConnectionString;
         }

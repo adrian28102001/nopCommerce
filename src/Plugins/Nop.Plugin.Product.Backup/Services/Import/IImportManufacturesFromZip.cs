@@ -5,5 +5,5 @@ namespace Nop.Plugin.Product.Backup.Services.Import;
 
 public interface IImportManufacturesFromZip
 {
-    Task DecompressFile(IFormFile importZipFiles);
+    Task<Task> DecompressFile(IFormFile importZipFiles);
 }

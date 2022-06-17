@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nop.Plugin.Product.Backup.Models;
 
-public class ProductModel
+public class ImportProductModel
 {
     public int Id { get; set; } 
     public int ProductTypeId { get; set; } 
