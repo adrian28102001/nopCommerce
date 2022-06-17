@@ -69,6 +69,7 @@ public class ImportManufacturesFromZip : IImportManufacturesFromZip
             var jsonString = await File.ReadAllTextAsync(file);
             var productJson = JsonSerializer.Deserialize<ProductModel>(jsonString)!;
             var product = await _mapping.MapProducts(productJson);
+            product.Published = true;
             var skuExists = await _productService.GetProductBySkuAsync(product.Sku);
             if (skuExists == null)
             {

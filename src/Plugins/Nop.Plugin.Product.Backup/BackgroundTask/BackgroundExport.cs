@@ -30,7 +30,7 @@ public class BackgroundExport : IHostedService, IDisposable
             },
             null,
             TimeSpan.Zero,
-            TimeSpan.FromSeconds(1));
+            TimeSpan.FromSeconds(10));
 
         return Task.CompletedTask;
     }
